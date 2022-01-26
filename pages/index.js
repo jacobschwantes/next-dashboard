@@ -19,6 +19,7 @@ import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react"
 import Signin from "./components/Signin";
 import { ChevronRightIcon, DotsVerticalIcon, SearchIcon, SelectorIcon } from '@heroicons/react/solid'
+import { data } from "autoprefixer";
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: true },
   { name: "Team", href: "#", icon: UsersIcon, current: false },
@@ -41,6 +42,9 @@ const userNavigation = [
 ]
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
+}
+async function fetchAPIData () {
+  await fetch('/api/getToken').then(data => console.log(data)).catch(err => console.loh(err))
 }
 
 export default function App() {
@@ -216,17 +220,17 @@ const { data: session } = useSession()
              
               <Menu as="div" className="px-3 relative inline-block text-left">
               <div>
-                <Menu.Button className="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                <Menu.Button className="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                   <span className="flex w-full justify-between items-center">
                     <span className="flex min-w-0 items-center justify-between space-x-3">
                       <img
                         className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
-                        src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80"
+                        src={session.user.image}
                         alt=""
                       />
                       <span className="flex-1 flex flex-col min-w-0">
-                        <span className="text-gray-900 text-sm font-medium truncate">Jessy Schwarz</span>
-                        <span className="text-gray-500 text-sm truncate">@jessyschwarz</span>
+                        <span className="text-gray-900 text-sm font-medium truncate">{session.user.name}</span>
+                        <span className="text-gray-500 text-xs truncate">{session.user.email}</span>
                       </span>
                     </span>
                     <SelectorIcon
@@ -245,7 +249,7 @@ const { data: session } = useSession()
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className=" z-50 mx-3 origin-bottom absolute right-0 left-0  mt-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none">
+                <Menu.Items className=" z-50 mx-3 origin-bottom absolute right-0 left-0  mt-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none transition-colors">
                   <div className="py-1">
                     <Menu.Item>
                       {({ active }) => (
@@ -253,7 +257,7 @@ const { data: session } = useSession()
                           href="#"
                           className={classNames(
                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                            'block px-4 py-2 text-sm'
+                            'block px-4 py-2 text-sm transition-colors'
                           )}
                         >
                           View profile
@@ -266,7 +270,7 @@ const { data: session } = useSession()
                           href="#"
                           className={classNames(
                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                            'block px-4 py-2 text-sm'
+                            'block px-4 py-2 text-sm transition-colors'
                           )}
                         >
                           Settings
@@ -279,7 +283,7 @@ const { data: session } = useSession()
                           href="#"
                           className={classNames(
                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                            'block px-4 py-2 text-sm'
+                            'block px-4 py-2 text-sm transition-colors'
                           )}
                         >
                           Notifications
@@ -294,7 +298,7 @@ const { data: session } = useSession()
                           href="#"
                           className={classNames(
                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                            'block px-4 py-2 text-sm'
+                            'block px-4 py-2 text-sm transition-colors'
                           )}
                         >
                           Get desktop app
@@ -307,7 +311,7 @@ const { data: session } = useSession()
                           href="#"
                           className={classNames(
                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                            'block px-4 py-2 text-sm'
+                            'block px-4 py-2 text-sm transition-colors'
                           )}
                         >
                           Support
@@ -325,7 +329,7 @@ const { data: session } = useSession()
                         }}
                           className={classNames(
                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                            'block px-4 py-2 text-sm'
+                            'block px-4 py-2 text-sm transition-colors'
                           )}
                         >
                           Logout
@@ -346,7 +350,7 @@ const { data: session } = useSession()
                       item.current
                         ? "bg-blue-100 text-blue-900"
                         : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
-                      "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                      "group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors"
                     )}
                   >
                     <item.icon
@@ -354,7 +358,7 @@ const { data: session } = useSession()
                         item.current
                           ? "text-blue-900"
                           : "text-gray-400 group-hover:text-gray-500",
-                        "mr-3 flex-shrink-0 h-6 w-6"
+                        "mr-3 flex-shrink-0 h-6 w-6 transition-colors"
                       )}
                       aria-hidden="true"
                     />
@@ -382,9 +386,12 @@ const { data: session } = useSession()
           <main className="flex-1">
             <div className="py-6">
               <div className=" mx-auto px-4 sm:px-6 md:px-8">
-                <h1 className="text-2xl font-semibold text-gray-900">
+
+                <a onClick={() => {
+                 fetchAPIData()
+                }} className="text-2xl font-semibold text-gray-900">
                   Dashboard
-                </h1>
+                </a>
               </div>
               <div className=" mx-auto px-4 sm:px-6 md:px-8 max-w-8xl">
                 {/* Replace with your content */}
