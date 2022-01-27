@@ -5,7 +5,7 @@ import { google } from "googleapis";
 import { getSession } from "next-auth/react";
 const url = process.env.MONGODB_URI;
 const client = new MongoClient(url);
-export default async (req, res) => {
+export default async function handler (req, res) {
   try {
     const session = await getSession({req})
     const dbName = "users";

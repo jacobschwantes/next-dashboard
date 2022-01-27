@@ -44,7 +44,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 async function fetchAPIData () {
-  await fetch('/api/getToken').then(data => console.log(data)).catch(err => console.loh(err))
+  await fetch('/api/getAccountSummary').then(data => console.log(data)).catch(err => console.loh(err))
 }
 
 export default function App() {
@@ -405,8 +405,7 @@ const { data: session } = useSession()
                           <br /> John Doe!
                         </h1>
                         <p>
-                          If you are going to use a passage of Lorem Ipsum, you
-                          need to be sure there isn't anything
+                          
                         </p>
                       </div>
                       <svg
