@@ -11,7 +11,7 @@ export default class PieChart extends React.Component {
     super(props);
 
     this.state = {
-      series: [1020, 22559, 33367, 20083],
+      series: [this.props.mobileUsers, this.props.desktopUsers, this.props.tabletUsers, this.props.otherUsers],
       options: {
         theme: {
             monochrome: {
@@ -38,7 +38,7 @@ export default class PieChart extends React.Component {
             "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
         },
         title: {
-          text: "Downloads",
+          text: this.props.label,
           align: "left",
           style: {
             fontSize: "20px",
@@ -91,7 +91,7 @@ export default class PieChart extends React.Component {
             vertical: 0
           }
         },
-        labels: ["Apples", "Oranges", "Bananas", "Berries"],
+        labels: ["Mobile", "Desktop", "Tablet", "Other"],
       },
     };
   }

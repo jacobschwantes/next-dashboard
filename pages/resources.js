@@ -72,7 +72,7 @@ export default function App() {
                   </Transition.Child>
                   <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                     <ProfileMenu session={session} />
-                    <Navigation active="projects" />
+                    <Navigation active="resources" />
                   </div>
                 </div>
               </Transition.Child>
@@ -87,7 +87,7 @@ export default function App() {
             <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white">
               <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                 <ProfileMenu session={session} />
-                <Navigation active="projects" />
+                <Navigation active="resources" />
               </div>
             </div>
           </div>

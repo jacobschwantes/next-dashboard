@@ -1,10 +1,8 @@
 import { google } from "googleapis";
 import { getSession } from "next-auth/react";
-import getCredentials from "./lib/db/getCredentials";
-export default async function handler(req, res) {
-    const session = await getSession({ req });
+import getCredentials from "./db/getCredentials";
+export default async function getViewId(session) {
     const credentials = await getCredentials(session);
-
     if (credentials) {
       const clientId = process.env.GOOGLE_CLIENT_ID;
       const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -21,11 +19,12 @@ export default async function handler(req, res) {
 
       const googleClient = google.analytics({ auth, version: "v3" });
       const summary = await googleClient.management.accountSummaries.list();
-      summary.status === 200 ? res.sttus(200).send(summary) : res.status(401).send()
+      return summary ? summary.data.items[1].webProperties[0].profiles[0].id : null
+      
       // Signed in
     } else {
       // Not Signed in
-      res.status(401).send("failed");
+      return
     }
   
 }
