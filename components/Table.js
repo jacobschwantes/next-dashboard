@@ -50,7 +50,7 @@ function classNames(...classes) {
 }
 export default function Table() {
   return (
-    <div className="rounded-2xl bg-gray-50  border   border-gray-200">
+    <div className="rounded-2xl bg-gray-50  border shadow-lg shadow-gray-100  border-gray-200">
       <table className="  min-w-full divide-y divide-gray-200 ">
         <thead >
           <tr>

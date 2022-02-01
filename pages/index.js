@@ -1,14 +1,17 @@
-import ApexChart from "./components/LineGraph";
-import PieChart from "./components/PieChart";
-import MetricsCard from "./components/MetricCard";
+import ApexChart from "../components/LineGraph";
+import PieChart from "../components/PieChart";
+import MetricsCard from "../components/MetricCard";
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition, Menu } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import Table from "./components/Table";
+import { MenuIcon, XIcon, TerminalIcon } from "@heroicons/react/outline";
+import Table from "../components/Table";
 import { useSession } from "next-auth/react";
-import Signin from "./components/Signin";
-import ProfileMenu from "./components/ProfileMenu";
-import Navigation from "./components/Navigation";
+import Signin from "../components/Signin";
+import ProfileMenu from "../components/ProfileMenu";
+import Navigation from "../components/Navigation";
+import { useAnalytics } from "../lib/utils";
+import EmblaCarousel from "../components/Carousel";
+
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,13 +21,8 @@ export default function App() {
     avg_session: null,
   });
   const { data: session, status } = useSession();
-
-  useEffect(() => {
-    fetch("/api/getAnalyticsData")
-      .then((res) => res.json())
-      .then((data) => setAnalyticsData(data))
-      .catch((err) => console.log(err));
-  }, []);
+  const SLIDE_COUNT = 2;
+  const slides = Array.from(Array(SLIDE_COUNT).keys());
   if (status === "authenticated") {
     return (
       <>
@@ -79,11 +77,10 @@ export default function App() {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                    <ProfileMenu session={session} />
-                    <Navigation active="app" />
+                 
+                    <Navigation session={session} active='app'/>
                   </div>
-                </div>
+                
               </Transition.Child>
               <div className="flex-shrink-0 w-14">
                 {/* Force sidebar to shrink to fit close icon */}
@@ -91,14 +88,9 @@ export default function App() {
             </Dialog>
           </Transition.Root>
           {/* Static sidebar for desktop */}
-          <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0">
+          <div className="hidden xl:flex xl:w-72 xl:flex-col xl:fixed xl:inset-y-0">
             {/* Sidebar component, swap this element with another sidebar if you like */}
-            <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white">
-              <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                <ProfileMenu session={session} />
-                <Navigation active="app" />
-              </div>
-            </div>
+            <Navigation session={session} active='app' />
           </div>
           <div className="xl:pl-64 flex flex-col flex-1 ">
             <div className="sticky top-0 z-10 xl:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white">
@@ -113,60 +105,64 @@ export default function App() {
             </div>
             <main className="flex-1">
               <div className="py-6">
-                <div className=" mx-auto px-4 sm:px-6 md:px-8">
+                <div className=" mx-auto px-4 sm:px-6 md:px-20">
                   <span className="text-2xl font-semibold text-gray-900">
                     Dashboard
                   </span>
                 </div>
-                <div className=" mx-auto px-4 sm:px-6 md:px-8 max-w-8xl">
+                <div className=" mx-auto px-4 sm:px-6 md:px-20 md:py-4 ">
                   <div className="lg:py-4 space-y-5">
-                    <div className="grid md:grid-cols-3 gap-5 grid-cols-1">
-                      <div className=" rounded-2xl    border   border-gray-200 col-span-3 3xl:col-span-2 bg-blue-100 relative hidden lg:block ">
-                        <div className="z-10 pt-5 px-10 absolute space-y-3 w-1/3">
-                          <h1 className=" text-3xl xl:text-4xl  font-bold  tracking-tight text-gray-800 text-left">
-                            Welcome back,
-                            <br/>
-                            {session.user.name.split(' ')[0]}!
-                          </h1>
-                          <p></p>
+                    <div className="grid lg:grid-cols-3 gap-5 grid-cols-1   pt-4">
+                      <div className=" rounded-2xl    border   border-gray-200 md:col-span-2  bg-blue-50   col-span-1 ">
+                        <div className=" p-10 space-y-3  flex md:justify-between justify-start items-center flex-col md:flex-row ">
+                          <div className=" flex flex-col items-center md:items-start justify-center md:justify-start space-y-4 ">
+                            <h1 className=" text-3xl   font-bold  tracking-tight text-gray-800 md:text-left text-center ">
+                              Welcome back,
+                              <br />
+                              {session.user.name}!
+                            </h1>
+                            <p className=" md:text-left text-center  ">
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit. Integer vestibulum aliquet condimentum.{" "}
+                            </p>
+                            <button
+                              type="submit"
+                              className="  flex justify-center py-2 px-4 border border-transparent rounded-md  bg-blue-500 shadow-lg shadow-blue-500/50 text-sm font-medium text-white  hover:bg-blue-400 hover:shadow-none transition-all focus:outline-none focus:ring-2  focus:ring-blue-500"
+                            >
+                              View Report
+                            </button></div>
+                          
+                          <img className="  max-h-64 " src="saly-10.png"></img>
                         </div>
-                        <svg
-                          className="rounded-2xl"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 25 1440 200"
-                        >
-                          <path
-                            fill="#1E3A8A"
-                            fill-opacity="1"
-                            d="M0,288L40,261.3C80,235,160,181,240,181.3C320,181,400,235,480,213.3C560,192,640,96,720,58.7C800,21,880,43,960,85.3C1040,128,1120,192,1200,208C1280,224,1360,192,1400,176L1440,160L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"
-                          ></path>
-                        </svg>
+                      </div>
+                      <div className="  col-span-1">
+                        <EmblaCarousel slides={slides}/>
                       </div>
                     </div>
-                    <div className="grid md:grid-cols-3 grid-cols-1 gap-5 grid-rows-1 w-full">
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-5 grid-rows-1 w-full">
                       <MetricsCard
-                        type='count'
+                        type="count"
                         change={1.5}
-                        count={analyticsData.page_views}
+                        value="page_views"
                         title="Page Views"
                         down="true"
                       />
                       <MetricsCard
-                        type='count'
+                        type="count"
                         change={-2.5}
-                        count={analyticsData.sessions}
+                        value="sessions"
                         title="Sessions"
                         down="false"
                       />
                       <MetricsCard
-                        type='time'
+                        type="time"
                         change={3}
-                        count={analyticsData.avg_session}
+                        value="avg_session"
                         title="Avg. Session Length"
                         down={false}
                       />
                     </div>
-                    <div className="grid md:grid-cols-3 grid-cols-1 gap-5  w-full">
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-5  w-full">
                       <div>
                         <PieChart
                           label="Sessions by Device"
@@ -180,7 +176,7 @@ export default function App() {
                         <ApexChart />
                       </div>
                     </div>
-                    <div className="grid md:grid-cols-3 grid-cols-1 gap-5  w-full">
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-5  w-full">
                       <div className=" col-span-2">
                         <Table />
                       </div>

@@ -4,18 +4,13 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
 import Signin from "./components/Signin";
 import ProfileMenu from "./components/ProfileMenu";
-import Navigation from "./components/Navigation";
+import Navigation from "./components/Pages";
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    fetch("/api/getAnalyticsData")
-      .then((res) => res.json())
-      .then((data) => setAnalyticsData(data))
-      .catch((err) => console.log(err));
-  }, []);
+
   if (status === 'authenticated') {
     return (
       <>

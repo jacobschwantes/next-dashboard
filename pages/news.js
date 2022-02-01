@@ -3,19 +3,14 @@ import { Dialog, Transition, Menu } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
 import Signin from "./components/Signin";
-import ProfileMenu from "./components/ProfileMenu";
 import Navigation from "./components/Navigation";
+
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    fetch("/api/getAnalyticsData")
-      .then((res) => res.json())
-      .then((data) => setAnalyticsData(data))
-      .catch((err) => console.log(err));
-  }, []);
+  
   if (status === 'authenticated') {
     return (
       <>
@@ -71,8 +66,7 @@ export default function App() {
                     </div>
                   </Transition.Child>
                   <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                    <ProfileMenu session={session} />
-                    <Navigation active="news" />
+                   <Navigation/>
                   </div>
                  
                 </div>
@@ -85,12 +79,7 @@ export default function App() {
           {/* Static sidebar for desktop */}
           <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0">
             {/* Sidebar component, swap this element with another sidebar if you like */}
-            <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white">
-              <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                <ProfileMenu session={session} />
-                <Navigation active="news" />
-              </div>
-            </div>
+           <Navigation session={session} active='news'/>
           </div>
           <div className="xl:pl-64 flex flex-col flex-1 ">
             <div className="sticky top-0 z-10 xl:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white">

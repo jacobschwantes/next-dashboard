@@ -9,8 +9,8 @@ function classNames(...classes) {
 export default function ProfileMenu(props) {
   return (
     <Menu>
-      <div className="flex-shrink-0 flex items-center px-2">
-        <Menu.Button className="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+      <div className="flex-shrink-0 flex items-center lg:px-2 ">
+        <Menu.Button className="group w-full bg-gray-100 border-gray-200 border rounded-lg p-4 text-sm text-left font-medium text-gray-700 transition-colors hover:bg-gray-200 ">
           <span className="flex w-full justify-between items-center">
             <span className="flex min-w-0 items-center justify-between space-x-3">
               <img
