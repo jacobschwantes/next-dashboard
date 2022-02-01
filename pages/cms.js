@@ -1,21 +1,16 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition, Menu } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { MenuIcon, XIcon, TerminalIcon } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
 import Signin from "./components/Signin";
 import ProfileMenu from "./components/ProfileMenu";
-import Navigation from "./components/Navigation";
+import Navigation from "./components/Pages";
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    fetch("/api/getAnalyticsData")
-      .then((res) => res.json())
-      .then((data) => setAnalyticsData(data))
-      .catch((err) => console.log(err));
-  }, []);
+
   if (status === 'authenticated') {
     return (
       <>
@@ -85,11 +80,19 @@ export default function App() {
           {/* Static sidebar for desktop */}
           <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0">
             {/* Sidebar component, swap this element with another sidebar if you like */}
-            <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white">
-              <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+            <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white items-center space-y-3">
+              <h1 className="text-2xl font-bold px-2 pt-5  flex items-start text-blue-500 "> <TerminalIcon className="  h-10 w-10"/> next-dashboard</h1>
+              <div className="flex-1  pb-4 overflow-y-auto">
                 <ProfileMenu session={session} />
                 <Navigation active="cms" />
               </div>
+              <span className="flex w-full items-center">
+              <button
+                type="submit"
+                className=" m-3 flex-1 justify-center py-2 px-4 border border-transparent rounded-md  bg-gray-300  text-sm font-medium text-gray-600  hover:bg-gray-200 hover:shadow-none transition-all "
+              >
+                Settings
+              </button></span>
             </div>
           </div>
           <div className="xl:pl-64 flex flex-col flex-1 ">
@@ -107,7 +110,7 @@ export default function App() {
               <div className="py-6">
                 <div className=" mx-auto px-4 sm:px-6 md:px-8">
                   <span className="text-2xl font-semibold text-gray-900">
-                    Dashboard
+                    CMS
                   </span>
                 </div>
                 <div className=" mx-auto px-4 sm:px-6 md:px-8 max-w-8xl">
