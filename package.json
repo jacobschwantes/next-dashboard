@@ -8,11 +8,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@badrap/bar-of-progress": "^0.1.2",
     "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.5",
     "@next-auth/mongodb-adapter": "^1.0.1",
     "@tailwindcss/forms": "^0.4.0",
     "apexcharts": "^3.31.0",
+    "embla-carousel-autoplay": "^6.1.1",
+    "embla-carousel-react": "^6.1.1",
     "googleapis": "^92.0.0",
     "heroicons": "^1.0.5",
     "mongodb": "^4.3.1",
