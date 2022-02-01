@@ -1,4 +1,3 @@
-// This is an example of how to read a JSON Web Token from an API route
 import { google } from "googleapis";
 import { getSession } from "next-auth/react";
 import getCredentials from "./lib/db/getCredentials";
@@ -7,7 +6,7 @@ export default async function handler(req, res) {
   const session = await getSession({ req });
   const credentials = await getCredentials(session);
   if (credentials) {
-    const viewId = await getViewId(session);
+
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     const accessToken = credentials.access_token;
@@ -20,49 +19,50 @@ export default async function handler(req, res) {
       access_token: accessToken,
       refresh_token: refreshToken,
     });
+    const googleClient = google.analyticsdata({version: "v1beta", auth})
 
-    const googleClient = google.analyticsreporting({ auth, version: "v4" });
     // Signed in
 
-    const report = await googleClient.reports.batchGet({
+    const report = await googleClient.properties.runReport({
+        property: "properties/301959631",
       requestBody: {
-        reportRequests: [
-          {
-            viewId: `ga:${viewId}`,
-            dateRanges: [
-              {
-                startDate: "30daysAgo",
-                endDate: "today",
-              },
-            ],
-            dimensions: [{ name: "ga:deviceCategory" }],
-            metrics: [
-              {
-                expression: "ga:pageviews",
-              },
-              {
-                expression: "ga:sessions",
-              },
-              {
-                expression: "ga:avgSessionDuration",
-              },
-            ],
-          },
-        ],
+    
+        dateRanges: [
+            {
+              startDate: '30daysAgo',
+              endDate: 'today',
+            },
+          ],
+        
+        metrics: [
+            {
+              name: "screenPageViews",
+            },
+            {
+              name: "sessions",
+            },
+            {
+              name: "averageSessionDuration",
+            },
+          ],
+          
       },
     });
-    const cleanReport = report.data.reports[0].data.totals[0].values;
-   console.log( JSON.stringify(report, undefined, 2))
-  
+    console.log(report)
+    let timestamp = new Date(Date.now());
+    console.log(timestamp.toLocaleDateString(), timestamp.toLocaleTimeString() , '- analytics data refreshed');
+    const cleanReport = report.data.rows[0].metricValues;
     cleanReport
-      ? res.status(200).send({
-          page_views: cleanReport[0],
-          sessions: cleanReport[1],
-          avg_session: cleanReport[2],
-        })
-      : res.status(401).send();
+    ? res.status(200).send({
+        page_views: cleanReport[0].value,
+        sessions: cleanReport[1].value,
+        avg_session: cleanReport[2].value,
+      })
+    : res.status(401).send();
+   
   } else {
     // Not Signed in
     res.status(401).send("failed");
   }
+
 }
