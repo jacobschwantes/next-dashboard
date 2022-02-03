@@ -168,7 +168,7 @@ export default class ApexChart extends React.Component {
 
   render() {
     return (
-      <div className="rounded-2xl bg-gray-50 p-5 border shadow-lg shadow-gray-100  border-gray-200">
+      <div className="rounded-2xl  p-5 border shadow-lg shadow-gray-100  border-gray-100">
         <Chart
           options={this.state.options}
           series={this.state.series}

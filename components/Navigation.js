@@ -1,6 +1,7 @@
 import ProfileMenu from "./ProfileMenu";
 import { TerminalIcon } from "@heroicons/react/solid";
 import Pages from "./Pages";
+import Image from "next/image";
 export default function Navigation(props) {
   return (
     <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white items-center  px-2">
@@ -11,7 +12,7 @@ export default function Navigation(props) {
       </div>
       <div className="  md:px-2 py-3 w-full ">
         <div className="bg-gray-100 flex space-x-3 rounded-lg p-4 items-center">
-        <img src={props.session.user.image} className="h-9 w-9 inline-flex rounded-full"></img>
+        <Image src={props.session.user.image} className="h-9 w-9 inline-flex rounded-full"></Image>
         <span className="flex flex-col">
           <h1 className="text-sm font-semibold">{props.session.user.name}</h1>
           <h1 className="text-sm text-gray-600">admin</h1>

@@ -19,9 +19,9 @@ export default function MetricsCard(props) {
   }
 
   return (
-    <div className="rounded-2xl  bg-gray-50 p-6  shadow-gray-100  flex justify-between items-center shadow-xl border-gray-200 border">
-      <div className="space-y-2 flex flex-col">
-        <span className="space-y-2">
+    <div className="rounded-2xl   p-6  shadow-gray-100  flex justify-between items-center shadow-lg border-gray-100 border">
+      <div className="space-y-3 flex flex-col">
+        <span className="space-y-3">
           <h1 className=" font-semibold text-left text ">{props.title}</h1>
           <div className="flex space-x-2 items-center">
             {props.change < 0 ? (

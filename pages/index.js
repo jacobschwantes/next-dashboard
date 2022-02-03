@@ -1,32 +1,20 @@
 import ApexChart from "../components/LineGraph";
 import PieChart from "../components/PieChart";
 import MetricsCard from "../components/MetricCard";
-import { Fragment, useEffect, useState } from "react";
-import { Dialog, Transition, Menu } from "@headlessui/react";
-import {
-  MenuIcon,
-  XIcon,
-  TerminalIcon,
-  BellIcon,
-  CogIcon
-} from "@heroicons/react/outline";
+import { Fragment, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { MenuIcon, XIcon, CogIcon } from "@heroicons/react/outline";
 import Table from "../components/Table";
 import { useSession } from "next-auth/react";
 import Signin from "../components/Signin";
 import Navigation from "../components/Navigation";
-import { useAnalytics } from "../lib/utils";
 import EmblaCarousel from "../components/Carousel";
-import BarChartSparkline from "../components/BarChartSparkline";
 import Notifications from "../components/Notifications";
 import ProfileMenu from "../components/ProfileMenu";
+import Image from "next/image";
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [analyticsData, setAnalyticsData] = useState({
-    page_views: null,
-    sessions: null,
-    avg_session: null,
-  });
   const { data: session, status } = useSession();
   const SLIDE_COUNT = 2;
   const slides = Array.from(Array(SLIDE_COUNT).keys());
@@ -99,28 +87,40 @@ export default function App() {
             <Navigation session={session} active="app" />
           </div>
           <div className="xl:pl-56 flex flex-col flex-1 ">
-            <div className="sticky top-0 z-20 xl:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white">
-              <button
-                type="button"
-                className="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <MenuIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-              <span className=" absolute right-7">
-                <Notifications />
+            <div className="sticky top-0 z-20 xl:hidden sm:pl-3 sm:pt-3 bg-white flex justify-between items-center p-2">
+              <span>
+                <button
+                  type="button"
+                  className="-ml-0.5 -mt-0.5 h-12 w-12 mr-1 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                  onClick={() => setSidebarOpen(true)}
+                >
+                  <span className="sr-only">Open sidebar</span>
+                  <MenuIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+                <span className="text-2xl font-semibold text-gray-900 hidden sm:inline-block">
+                  Dashboard
+                </span>
               </span>
+              <div>
+                <span className=" sm:space-x-5 space-x-3 flex items-center justify-center ">
+                  <button>
+                    <CogIcon className="h-7 w-7 text-gray-700 hover:text-gray-800 hover:scale-110" />
+                  </button>
+                  <Notifications />
+                  <ProfileMenu session={session} />
+                </span>
+              </div>
             </div>
             <main className="flex-1">
               <div className="py-3">
-                <div className=" py-3 mx-auto px-4 sm:px-6 md:px-16  sticky top-0  z-40 flex justify-between bg-white bg-opacity-60 backdrop-blur   ">
+                <div className=" py-3 mx-auto px-4 sm:px-6 md:px-16  sticky top-0  z-40 xl:flex justify-between bg-white bg-opacity-60 backdrop-blur hidden  ">
                   <span className="text-2xl font-semibold text-gray-900">
                     Dashboard
                   </span>
                   <span className=" space-x-5 flex items-center justify-center ">
                     <button>
-                    <CogIcon className="h-7 w-7 text-gray-700 hover:text-gray-800 hover:scale-110" /></button>
+                      <CogIcon className="h-7 w-7 text-gray-700 hover:text-gray-800 hover:scale-110" />
+                    </button>
                     <Notifications />
                     <ProfileMenu session={session} />
                   </span>
@@ -148,10 +148,10 @@ export default function App() {
                             </button>
                           </div>
 
-                          <img
+                          <Image
                             className="  2xl:max-h-64 max-h-52  "
                             src="saly-10.png"
-                          ></img>
+                          ></Image>
                         </div>
                       </div>
                       <div className="  col-span-1">
@@ -216,7 +216,7 @@ export default function App() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center h-screen w-screen">
-        <img src="loading.svg"></img>
+        <Image src="loading.svg"></Image>
       </div>
     );
   }

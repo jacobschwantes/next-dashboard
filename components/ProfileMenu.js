@@ -3,6 +3,7 @@ import { Transition } from "@headlessui/react";
 import { Menu } from "@headlessui/react";
 import { signOut } from "next-auth/react";
 import { BellIcon } from "@heroicons/react/outline";
+import Image from "next/image";
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
@@ -12,7 +13,7 @@ export default function ProfileMenu(props) {
       <div >
         <Menu.Button className=" hover:scale-110 transition-transform   rounded-full hover:brightness-90  ">
           
-      <img src={props.session.user.image} className="h-9 w-9 rounded-full inline-block "></img>
+      <Image src={props.session.user.image} className="h-9 w-9 rounded-full inline-block "></Image>
         </Menu.Button>
       </div>
       <Transition

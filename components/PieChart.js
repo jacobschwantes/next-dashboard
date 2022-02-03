@@ -98,7 +98,7 @@ export default class PieChart extends React.Component {
 
   render() {
     return (
-      <div className="rounded-2xl  bg-gray-50 p-5 border   border-gray-200 shadow-lg shadow-gray-100">
+      <div className="rounded-2xl   p-5 border   border-gray-100 shadow-lg shadow-gray-100">
         <Chart
           options={this.state.options}
           series={this.state.series}

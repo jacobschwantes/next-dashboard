@@ -7,6 +7,7 @@ import Navigation from "../components/Navigation";
 import { CogIcon } from "@heroicons/react/outline";
 import Notifications from "../components/Notifications";
 import ProfileMenu from "../components/ProfileMenu";
+import Image from "next/image";
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -123,7 +124,7 @@ export default function App() {
       </>
     );
   } if (status === 'loading') {
-    return <div className="flex items-center justify-center h-screen w-screen"><img src="loading.svg"></img></div>
+    return <div className="flex items-center justify-center h-screen w-screen"><Image src="loading.svg"></Image></div>
   }
   return <Signin />;
 }
