@@ -16,9 +16,9 @@ export default class PieChart extends React.Component {
         theme: {
             monochrome: {
               enabled: true,
-              color: '#1E3A8A',
+              color: '#1d4ed8',
               shadeTo: 'light',
-              shadeIntensity: .85
+              shadeIntensity: 1
             }
           },
         tooltip: {
@@ -32,7 +32,7 @@ export default class PieChart extends React.Component {
           },
 
         chart: {
-          height: 350,
+          height: 200,
           type: "donut",
           fontFamily:
             "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
@@ -88,7 +88,7 @@ export default class PieChart extends React.Component {
           position: "bottom",
           itemMargin: {
             horizontal: 10,
-            vertical: 0
+            vertical: 10
           }
         },
         labels: ["Mobile", "Desktop", "Tablet", "Other"],

@@ -12,7 +12,7 @@ function classNames(...classes) {
 }
 export default function Pages(props) {
   const navigation = [
-    { name: "App", href: "/", icon: ChipIcon, current: props.active === "app" },
+    { name: "Dashboard", href: "/", icon: ChipIcon, current: props.active === "app" },
     {
       name: "Projects",
       href: "/projects",
@@ -45,7 +45,7 @@ export default function Pages(props) {
     },
   ];
   return (
-    <nav className="mt-5 flex-1 lg:px-2 p-0 bg-white space-y-1">
+    <nav className="mt-2 flex-1 lg:px-2 p-0 bg-white space-y-1">
       {navigation.map((item) => (
         <Link href={item.href}>
           <a
@@ -54,7 +54,7 @@ export default function Pages(props) {
               item.current
                 ? "bg-blue-100 text-blue-600    "
                 : "text-gray-600  hover:text-gray-900",
-              " flex items-center px-3 py-2 border border-transparent rounded-lg  hover:bg-gray-100 text-md font-semibold text-white transition-all "
+              " flex items-center px-3 py-2 border border-transparent rounded-lg  hover:bg-gray-100 text-md font-semibold text-white transition-all hover:scale-105 "
             )}
           >
             <item.icon

@@ -12,6 +12,42 @@ export default class ApexChart extends React.Component {
     super(props);
 
     this.state = {
+      chart: {
+        toolbar: {
+          show: true,
+          offsetX: 0,
+          offsetY: 0,
+          tools: {
+            download: true,
+            selection: true,
+            zoom: true,
+            zoomin: true,
+            zoomout: true,
+            pan: true,
+            reset: true | '<img src="/static/icons/reset.png" width="20">',
+            customIcons: []
+          },
+          export: {
+            csv: {
+              filename: undefined,
+              columnDelimiter: ',',
+              headerCategory: 'category',
+              headerValue: 'value',
+              dateFormatter(timestamp) {
+                return new Date(timestamp).toDateString()
+              }
+            },
+            svg: {
+              filename: undefined,
+            },
+            png: {
+              filename: undefined,
+            }
+          },
+          autoSelected: 'zoom' 
+        },
+    },
+    
       series: [
         {
           name: "2019",
@@ -25,13 +61,16 @@ export default class ApexChart extends React.Component {
 
       options: {
         theme: {
+          mode: 'light', 
+          palette: 'palette1', 
           monochrome: {
-            enabled: true,
-            color: '#1E3A8A',
-            shadeTo: 'light',
-            shadeIntensity: .65
-          }
-        },
+              enabled: false,
+              color: '#255aee',
+              shadeTo: 'light',
+              shadeIntensity: 0.65
+          },
+      },
+      
         chart: {
           zoom: {
             enabled: false,
@@ -49,8 +88,12 @@ export default class ApexChart extends React.Component {
           },
         },
         stroke: {
-          curve: "smooth",
-        },
+          show: true,
+          curve: 'smooth',
+          lineCap: 'butt',
+          width: 3,
+          dashArray: 0,      
+      },
         title: {
           text: "Area Installed",
           align: "left",

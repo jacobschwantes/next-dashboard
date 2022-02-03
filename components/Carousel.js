@@ -7,7 +7,7 @@ const autoplay = Autoplay(options, autoplayRoot);
 
 const media = [
   { title: "Ethereum hits new highs", subtitle: "Prices soared to more than $4,000 on wednesday.", src: "media1.jpg" },
-  { title: "Building permits blocked", subtitle: "Sky rise permits in north Chicago were blocked by Gov. Newson.", src: "media2.jpg" },
+  { title: "Building permits blocked", subtitle: "Sky rise permits in north Chicago were blocked by Gov. Newson.dsfsdfdsfsdfsdfsdfsdfsdfsdf", src: "media2.jpg" },
   { title: "Technology REST API", subtitle: "Get tech prices, news, and more.", src: "media3.jpg" },
 ];
 
@@ -45,7 +45,7 @@ const NextButton = ({ enabled, onClick }) => (
 
 const EmblaCarousel = ({ slides }) => {
   const [viewportRef, embla] = useEmblaCarousel(
-    { skipSnaps: false, loop: true, speed: 4 },
+    { skipSnaps: false, loop: true, speed: 10 },
     [autoplay]
   );
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
@@ -91,11 +91,11 @@ const EmblaCarousel = ({ slides }) => {
             {media.map((slide, index) => (
               <div className="embla__slide" key={index}>
                  
-                <div className="embla__slide__inner">
-                    <span className="z-50 absolute bottom-5 left-5 space-y-1  ">
-                    <h1 className={"text-gray-300  font-semibold  uppercase"+(selectedIndex === index ? " animate-fade-in-right-fast " : "invisible")}>breaking news</h1>
-                     <h1 className={"text-white text-3xl font-medium tracking-tight truncate"+(selectedIndex === index ? " animate-fade-in-right " : "invisible")}>{slide.title}</h1>
-                    <p className={"text-gray-50 tracking-tight truncate"+(selectedIndex === index ? " animate-fade-in-right-slow " : "invisible")}>{slide.subtitle}</p></span>
+                <div className="relative  overflow-hidden h-auto min-h-300 2xl:min-h-350 truncate">
+                    <span className="z-40 absolute bottom-5 left-5 space-y-1 ">
+                    <h1 className={"text-gray-300  font-semibold text-sm  uppercase"+(selectedIndex === index ? " animate-fade-in-right-fast " : "invisible")}>breaking news</h1>
+                     <h1 className={"text-white text-xl font-medium truncate"+(selectedIndex === index ? " animate-fade-in-right " : "invisible")}>{slide.title}</h1>
+                    <p className={"text-gray-50 truncate text-sm"+(selectedIndex === index ? " animate-fade-in-right-slow " : "invisible")}>{slide.subtitle}</p></span>
                   <img
                     className="embla__slide__img brightness-75  transition-all cursor-pointer"
                     src={slide.src}

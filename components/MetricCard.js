@@ -4,6 +4,7 @@ import {
   TrendingDownIcon,
   TrendingUpIcon,
 } from "@heroicons/react/solid";
+import BarChartSparkline from "./BarChartSparkline";
 const numeral = require("numeral");
 
 export default function MetricsCard(props) {
@@ -18,24 +19,27 @@ export default function MetricsCard(props) {
   }
 
   return (
-    <div className="rounded-2xl  bg-gray-50 p-6 border shadow-gray-100  border-gray-200 space-y-2 flex lg:flex-col items-center justify-between lg:items-start shadow-lg">
-    <span className="space-y-2">
-        <h1 className=" font-semibold text-left text ">{props.title}</h1>
-        <div className="flex space-x-2 items-center">
-          {props.change < 0 ? (
-            <TrendingDownIcon className="  h-6 w-6 bg-red-200 text-red-700 rounded-full p-1" />
-          ) : (
-            <TrendingUpIcon className="  h-6 w-6 bg-green-200 text-green-700 rounded-full p-1" />
-          )}
-          <span className=" font-semibold text-sm ">
-            {(props.change > 0 ? '+' : '') + props.change.toFixed(1)}%
-          </span>
-        </div>
-  </span>
+    <div className="rounded-2xl  bg-gray-50 p-6  shadow-gray-100  flex justify-between items-center shadow-xl border-gray-200 border">
+      <div className="space-y-2 flex flex-col">
+        <span className="space-y-2">
+          <h1 className=" font-semibold text-left text ">{props.title}</h1>
+          <div className="flex space-x-2 items-center">
+            {props.change < 0 ? (
+              <TrendingDownIcon className="  h-6 w-6 bg-red-200 text-red-700 rounded-full p-1" />
+            ) : (
+              <TrendingUpIcon className="  h-6 w-6 bg-green-200 text-green-700 rounded-full p-1" />
+            )}
+            <span className=" font-semibold text-sm ">
+              {(props.change > 0 ? "+" : "") + props.change.toFixed(1)}%
+            </span>
+          </div>
+        </span>
 
-      <h1 className="text-left text-4xl font-bold">
-        <Value />
-      </h1>
+        <h1 className="text-left text-4xl font-bold">
+          <Value />
+        </h1>
+      </div>
+      <BarChartSparkline theme={props.theme} />
     </div>
   );
 }
