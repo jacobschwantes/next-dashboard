@@ -2,9 +2,9 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition, Menu } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
-import Signin from "./components/Signin";
-import ProfileMenu from "./components/ProfileMenu";
-import Navigation from "./components/Pages";
+import Signin from "../components/Signin";
+import ProfileMenu from "../components/ProfileMenu";
+import Navigation from "../components/Pages";
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

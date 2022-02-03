@@ -2,9 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition, Menu } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
-import Signin from "./components/Signin";
-import Navigation from "./components/Navigation";
-
+import Signin from "../components/Signin";
+import Navigation from "../components/Navigation";
+import { CogIcon } from "@heroicons/react/outline";
+import Notifications from "../components/Notifications";
+import ProfileMenu from "../components/ProfileMenu";
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -77,12 +79,12 @@ export default function App() {
             </Dialog>
           </Transition.Root>
           {/* Static sidebar for desktop */}
-          <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0">
+          <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 xl:z-50">
             {/* Sidebar component, swap this element with another sidebar if you like */}
            <Navigation session={session} active='news'/>
           </div>
-          <div className="xl:pl-64 flex flex-col flex-1 ">
-            <div className="sticky top-0 z-10 xl:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white">
+          <div className="xl:pl-56 flex flex-col flex-1 ">
+            <div className="sticky top-0 z-20 xl:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white">
               <button
                 type="button"
                 className="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -93,10 +95,16 @@ export default function App() {
               </button>
             </div>
             <main className="flex-1">
-              <div className="py-6">
-                <div className=" mx-auto px-4 sm:px-6 md:px-8">
+              <div className="py-3">
+              <div className=" py-3 mx-auto px-4 sm:px-6 md:px-16  sticky top-0  z-40 flex justify-between bg-white bg-opacity-60 backdrop-blur   ">
                   <span className="text-2xl font-semibold text-gray-900">
-                    Dashboard
+                    News
+                  </span>
+                  <span className=" space-x-5 flex items-center justify-center ">
+                    <button>
+                    <CogIcon className="h-7 w-7 text-gray-700 hover:text-gray-800 hover:scale-110" /></button>
+                    <Notifications />
+                    <ProfileMenu session={session} />
                   </span>
                 </div>
                 <div className=" mx-auto px-4 sm:px-6 md:px-8 max-w-8xl">
