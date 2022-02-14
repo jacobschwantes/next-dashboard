@@ -1,127 +1,199 @@
-import { Fragment, useEffect, useState } from "react";
-import { Dialog, Transition, Menu } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { useSession } from "next-auth/react";
-import Signin from "../components/Signin";
-import ProfileMenu from "../components/ProfileMenu";
-import Navigation from "../components/Pages";
-import Image from "next/image";
+import {
+  DotsHorizontalIcon,
+  ViewGridIcon,
+  ViewListIcon,
+} from "@heroicons/react/solid";
+import CircleProgress from "../components/CircleProgress";
+import Input from "../components/Input";
+import Wrapper, { SessionContext } from "../components/Wrapper";
+import { useState } from "react";
+import Dropdown from "../components/Dropdown";
+import ProjectModal from "../components/ProjectModal";
+import ProjectDropdown from "../components/ProjectDropdown";
+import DeleteModal from "../components/DeleteModal";
+import ProjectCard from "../components/ProjectCard";
+import { useProjects } from "../lib/utils";
+import useSWR, { useSWRConfig } from "swr";
+import ProjectLoadingState from "../components/ProjectLoadingState";
+
+async function getLoadingStates() {
+  return ['1', '2', '3', '4', '5', '6'] 
+}
+async function postData(url = "", data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        let text = await res.text();
+        throw new Error(text);
+      }
+    })
+    .catch((e) => {
+      console.log(e.message)
+    });
+  return response; // parses JSON response into native JavaScript objects
+}
+const filterOptions = [
+  { option: "active", id: "active" },
+  { option: "in-progress", id: "in-progress" },
+  { option: "completed", id: "completed" },
+  { option: "all", id: null },
+];
 
 export default function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { data: session, status } = useSession();
-
-  
-  if (status === 'authenticated') {
-    return (
-      <>
-        <div>
-          <Transition.Root show={sidebarOpen} as={Fragment}>
-            <Dialog
-              as="div"
-              className="fixed inset-0 flex z-40 xl:hidden"
-              onClose={setSidebarOpen}
-            >
-              <Transition.Child
-                as={Fragment}
-                enter="transition-opacity ease-linear duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="transition-opacity ease-linear duration-300"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Dialog.Overlay className="fixed inset-0 bg-gray-600 bg-opacity-75" />
-              </Transition.Child>
-              <Transition.Child
-                as={Fragment}
-                enter="transition ease-in-out duration-300 transform"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="transition ease-in-out duration-300 transform"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-in-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in-out duration-300"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <div className="absolute top-0 right-0 -mr-12 pt-2">
-                      <button
-                        type="button"
-                        className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                        onClick={() => setSidebarOpen(false)}
-                      >
-                        <span className="sr-only">Close sidebar</span>
-                        <XIcon
-                          className="h-6 w-6 text-white"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </div>
-                  </Transition.Child>
-                  <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                    <ProfileMenu session={session} />
-                    <Navigation active="projects" />
-                  </div>
-                </div>
-              </Transition.Child>
-              <div className="flex-shrink-0 w-14">
-                {/* Force sidebar to shrink to fit close icon */}
-              </div>
-            </Dialog>
-          </Transition.Root>
-          {/* Static sidebar for desktop */}
-          <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0">
-            {/* Sidebar component, swap this element with another sidebar if you like */}
-            <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white">
-              <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                <ProfileMenu session={session} />
-                <Navigation active="projects" />
-              </div>
-            </div>
-          </div>
-          <div className="xl:pl-64 flex flex-col flex-1 ">
-            <div className="sticky top-0 z-10 xl:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white">
-              <button
-                type="button"
-                className="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <MenuIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <main className="flex-1">
-              <div className="py-6">
-                <div className=" mx-auto px-4 sm:px-6 md:px-8">
-                  <span className="text-2xl font-semibold text-gray-900">
-                    Dashboard
+  const { mutate } = useSWRConfig();
+  const { projects, isLoading, error } = useProjects();
+  const [filter, setFilter] = useState(null);
+  const [grid, setGrid] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  let searchProjects =
+    isLoading || error
+      ? null
+      : projects.filter((item) => {
+          let lowercase = item.name.toLowerCase();
+          return lowercase.includes(search);
+        });
+  let filteredProjects =
+    isLoading || error
+      ? null
+      : searchProjects.filter((item) => item.status === filter);
+  return (
+    <Wrapper title="Projects" active="projects">
+      <SessionContext.Consumer>
+        {(session) => (
+          <div className="grid 2xl:grid-cols-5 xl:grid-cols-4 min-h-screen relative pb-10 ">
+            <ProjectModal
+              verb="Create"
+              heading="Create Project"
+              open={open}
+              setOpen={setOpen}
+              session={session}
+              update={() => mutate("/api/projects/getprojects")}
+              project={{
+                name: "",
+                category: "",
+                description: "",
+                tags: [],
+                members: [
+                  {
+                    name: session.user.name,
+                    email: session.user.email,
+                    image: session.user.image,
+                    access: "owner",
+                  },
+                ],
+                theme: {
+                  name: "Blue",
+                  bgColor: "bg-blue-500",
+                  selectedColor: "ring-blue-500",
+                },
+                privacy: {
+                  id: "team",
+                  name: "Private to Project Members",
+                  description: "Only members of this project would be able to access",
+                },
+              }}
+            />
+            <div className="     2xl:col-span-4 xl:col-span-3 bg-white  ">
+              <div className=" flex  flex-col sm:flex-row sm:justify-between  py-4 2xl:px-8 xl:px-3 px-3 space-y-2 ">
+                <div className="flex items-center space-x-4 justify-between sm:justify-start ">
+                  <Dropdown
+                    title="Filter by"
+                    options={filterOptions}
+                    update={setFilter}
+                  />
+                  <span className=" space-x-2 flex items-center">
+                    <button onClick={() => setGrid(true)}>
+                      <ViewGridIcon
+                        className={
+                          "h-6 hover:scale-105 transition-all hover:text-blue-500" +
+                          (grid ? " text-blue-500" : " text-gray-500")
+                        }
+                      />
+                    </button>
+                    <button onClick={() => setGrid(false)}>
+                      <ViewListIcon
+                        className={
+                          "h-6 hover:scale-105 transition-all hover:text-blue-500" +
+                          (!grid ? " text-blue-500" : " text-gray-500")
+                        }
+                      />
+                    </button>
                   </span>
                 </div>
-                <div className=" mx-auto px-4 sm:px-6 md:px-8 max-w-8xl">
-                  <div className="py-4 space-y-5">
-                 
-                  
-                  
-                   
-                  </div>
-                  {/* /End replace */}
+                <div className="  sm:flex block w-full sm:w-auto space-y-2 sm:space-y-0 items-center sm:space-x-3">
+                  <Input
+                    setInput={setSearch}
+                    value={search}
+                    type="search"
+                    name="search"
+                    id="search"
+                    placeholder="Search"
+                  />
+                  <button
+                    onClick={() => setOpen(true)}
+                    type="button"
+                    className="  w-full sm:w-auto items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Create Project
+                  </button>
                 </div>
               </div>
-            </main>
+
+              <div
+                className={
+                  " sm:px-3 px-2 2xl:px-8 xl:px-3" +
+                  (grid
+                    ? " grid 2xl:grid-cols-4 xl:grid-cols-3  grid-cols-1 2xl:gap-8 lg:gap-5 gap-5"
+                    : " flex flex-col space-y-5")
+                }
+              >
+                {isLoading
+                  ? ['1', '2', '3', '4', '5', '6'].map((item) => {
+                    return (
+                      <ProjectLoadingState index={item} grid={grid}/>
+                    )
+                  })
+                  : (search && !filter
+                      ? searchProjects
+                      : filter
+                      ? filteredProjects
+                      : projects
+                    ).map((item) => {
+                      return (
+                        <ProjectCard
+                        update={() => mutate('/api/projects/getprojects')}
+                        delete={async () => await postData('/api/projects/deleteproject', item).then(() =>mutate('/api/projects/getprojects'))}
+                          session={session}
+                          grid={grid}
+                          project={item}
+                        />
+                      );
+                    })}
+              </div>
+            </div>
+            <div className=" col-span-1 px-6 py-4 bg-white border-l">
+              <h1 className="text-2xl font-semibold">Progress</h1>
+              <CircleProgress />
+              <div className="flex justify-between">
+                <h1>Active</h1>
+                <h1>In-Progress</h1>
+                <h1>Completed</h1>
+              </div>
+            </div>
           </div>
-        </div>
-      </>
-    );
-  } if (status === 'loading') {
-    return <div className="flex items-center justify-center h-screen w-screen"><Image src="loading.svg"></Image></div>
-  }
-  return <Signin />;
+        )}
+      </SessionContext.Consumer>
+    </Wrapper>
+  );
 }
