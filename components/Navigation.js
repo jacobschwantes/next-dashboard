@@ -12,7 +12,7 @@ export default function Navigation(props) {
       </div>
       <div className="  md:px-2 py-3 w-full ">
         <div className="bg-gray-100 flex space-x-3 rounded-lg p-4 items-center">
-        <Image src={props.session.user.image} className="h-9 w-9 inline-flex rounded-full"></Image>
+        <img src={props.session.user.image} className="h-9 w-9 inline-flex rounded-full"></img>
         <span className="flex flex-col">
           <h1 className="text-sm font-semibold">{props.session.user.name}</h1>
           <h1 className="text-sm text-gray-600">admin</h1>

@@ -35,7 +35,7 @@ const unread = [
 const read = [];
 export default function Notifications(props) {
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className=" xs:relative   inline-block text-left">
       <div className="flex items-center">
         <Menu.Button className=" hover:scale-110 transition-transform ">
           <span className=" absolute z-10 bg-red-500 font-semibold text-white rounded-xl px-1 text-xs ">
@@ -57,7 +57,7 @@ export default function Notifications(props) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className=" origin-top-right absolute right-0 mt-2 w-80 rounded-md  shadow-lg  bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
+        <Menu.Items className=" origin-top-right absolute w-screen left-0 xs:right-0 xs:left-auto  mt-2 xs:w-80 rounded-md  shadow-lg  bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (

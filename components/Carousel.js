@@ -97,7 +97,7 @@ const EmblaCarousel = ({ slides }) => {
                     <h1 className={"text-gray-300  font-semibold text-sm  uppercase"+(selectedIndex === index ? " animate-fade-in-right-fast " : "invisible")}>breaking news</h1>
                      <h1 className={"text-white text-xl font-medium truncate"+(selectedIndex === index ? " animate-fade-in-right " : "invisible")}>{slide.title}</h1>
                     <p className={"text-gray-50 truncate text-sm"+(selectedIndex === index ? " animate-fade-in-right-slow " : "invisible")}>{slide.subtitle}</p></span>
-                  <Image
+                  <img
                     className="embla__slide__img brightness-75  transition-all cursor-pointer"
                     src={slide.src}
                     alt="A cool cat."

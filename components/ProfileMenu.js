@@ -13,7 +13,7 @@ export default function ProfileMenu(props) {
       <div >
         <Menu.Button className=" hover:scale-110 transition-transform   rounded-full hover:brightness-90  ">
           
-      <Image src={props.session.user.image} className="h-9 w-9 rounded-full inline-block "></Image>
+      <img src={props.session.user.image} className="h-9 w-9 rounded-full inline-block "></img>
         </Menu.Button>
       </div>
       <Transition
@@ -90,9 +90,13 @@ export default function ProfileMenu(props) {
             <Menu.Item>
               {({ active }) => (
                 <a
+                href="/"
                   onClick={(e) => {
                     e.preventDefault();
-                    signOut();
+                    signOut({
+                      callbackUrl: `${window.location.origin}`
+                    });
+                    
                   }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",

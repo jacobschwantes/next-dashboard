@@ -12,7 +12,7 @@ function classNames(...classes) {
 }
 export default function Pages(props) {
   const navigation = [
-    { name: "Dashboard", href: "/", icon: ChipIcon, current: props.active === "app" },
+    { name: "Dashboard", href: "/", icon: ChipIcon, current: props.active === "dashboard" },
     {
       name: "Projects",
       href: "/projects",
