@@ -1,57 +1,56 @@
 import '../styles/globals.css'
 import ProgressBar from "@badrap/bar-of-progress";
-
 import { SessionProvider } from "next-auth/react"
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-
+import { useEffect } from "react";
+import Script from "next/script";
+import { useRouter } from "next/router";
+import * as gtag from "../lib/ga/gtag";
 const progress = new ProgressBar({
   size: 2,
   color: "#6366f1",
   className: "bar-of-progress",
   delay: 100,
 });
-export const pageview = (url) => {
-  window.gtag('config', process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS, {
-    page_path: url,
-  })
-}
-
-// log specific events happening.
-export const event = ({ action, params }) => {
-  window.gtag('event', action, params)
-}
-
-function MyApp({
-  Component,
-  pageProps: { session, ...pageProps },
-}) {
-  const router = useRouter()
-
+function MyApp({ Component,  pageProps: { session, ...pageProps }, }) {
+  const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url) => {
-      pageview(url)
-      progress.finish()
-    }
-    //When the component is mounted, subscribe to router changes
-    //and log those page views
-    router.events.on('routeChangeComplete', handleRouteChange)
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange); 
     router.events.on("routeChangeStart", progress.start);
     router.events.on("routeChangeError", progress.finish);
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method
+    router.events.on("routeChangeComplete", progress.finish); 
     return () => {
-      router.events.off('routeChangeComplete', handleRouteChange)
-    }
-  }, [router.events])
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
 
   return (
-    <SessionProvider session={session}>
-  <Component {...pageProps} />
-  </SessionProvider>
-  )
+    <>
+      {/* Global Site Tag (gtag.js) - Google Analytics */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      />
+      <Script
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
+  <SessionProvider session={session}>
+        <Component {...pageProps} />
+    </SessionProvider>
+    </>
+  );
 }
 
-export default MyApp
-
+export default MyApp;
