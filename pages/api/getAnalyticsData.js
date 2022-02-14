@@ -2,11 +2,12 @@ import { google } from "googleapis";
 import { getSession } from "next-auth/react";
 import getCredentials from "./lib/db/getCredentials";
 import getViewId from "./lib/getViewId";
+import { refreshAccessToken } from "./lib/db/refreshAccessToken";
 export default async function handler(req, res) {
   const session = await getSession({ req });
   const credentials = await getCredentials(session);
   if (credentials) {
-
+    console.log(credentials)
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     const accessToken = credentials.access_token;
@@ -60,9 +61,11 @@ export default async function handler(req, res) {
       })
     : res.status(401).send();
    
-  } else {
+  
+} 
+   else {
     // Not Signed in
-    res.status(401).send("failed");
+    res.status(401).send("unauthorized");
   }
 
 }

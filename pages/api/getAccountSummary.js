@@ -3,6 +3,7 @@ import { getSession } from "next-auth/react";
 import getCredentials from "./lib/db/getCredentials";
 export default async function handler(req, res) {
     const session = await getSession({ req });
+  if (session) {
     const credentials = await getCredentials(session);
 
     if (credentials) {
@@ -21,11 +22,13 @@ export default async function handler(req, res) {
 
       const googleClient = google.analytics({ auth, version: "v3" });
       const summary = await googleClient.management.accountSummaries.list();
-      summary.status === 200 ? res.sttus(200).send(summary) : res.status(401).send()
+      summary.status === 200
+        ? res.sttus(200).send(summary)
+        : res.status(401).send();
       // Signed in
-    } else {
-      // Not Signed in
-      res.status(401).send("failed");
     }
-  
+  } else {
+      // Not Signed in
+      res.status(401).send("unauthorized");
+    }
 }

@@ -20,6 +20,8 @@ export default async function getCredentials(session) {
     } else {
       return;
     }
+  } catch {
+    return;
   } finally {
     client.close();
   }
