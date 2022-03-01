@@ -14,14 +14,21 @@ export default function Wrapper(props) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session, status } = useSession();
+if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center h-screen w-screen  ">
+        <img src="/loading.svg"></img>
+      </div>
+    )}
+
   if (status === "authenticated") {
     return (
       <>
-        <div>
+        <div className=" ">
           <Transition.Root show={sidebarOpen} as={Fragment}>
             <Dialog
               as="div"
-              className="fixed inset-0 flex z-40 xl:hidden"
+              className="fixed inset-0 flex z-30 xl:hidden"
               onClose={setSidebarOpen}
             >
               <Transition.Child
@@ -44,7 +51,7 @@ export default function Wrapper(props) {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+                <div className="relative flex-1 flex flex-col max-w-xs w-full dark:bg-gray-900 bg-white ">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-300"
@@ -78,12 +85,12 @@ export default function Wrapper(props) {
             </Dialog>
           </Transition.Root>
           {/* Static sidebar for desktop */}
-          <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 xl:z-50">
+          <div className={"hidden xl:flex    border-r h-screen  xl:flex-col xl:fixed  xl:z-50 overflow-hidden group duration-300 transition-all " + sticky ? " w-72" : " xl:w-24 xl:hover:w-72"}>
             {/* Sidebar component, swap this element with another sidebar if you like */}
             <Navigation session={session} active={props.active} />
           </div>
-          <div className="xl:pl-64 flex flex-col flex-1 ">
-            <div className="sticky top-0 z-20 xl:hidden sm:pl-3 sm:pt-3 bg-white flex justify-between items-center p-2">
+          <div className={" h-screen flex flex-col overflow-hidden  " + sticky ? " xl:pl-72" : " xl:pl-24"}>
+            <div className="sticky top-0  xl:hidden sm:pl-3 sm:pt-3 dark:bg-gray-900 bg-white  flex justify-between items-center p-2">
               <span>
                 <button
                   type="button"
@@ -101,46 +108,41 @@ export default function Wrapper(props) {
               <div>
                 <span className=" sm:space-x-5 space-x-3 flex items-center justify-center ">
                   <button>
-                    <CogIcon className="h-7 w-7 text-gray-700 hover:text-gray-800 hover:scale-110" />
+                    <CogIcon className="h-7 w-7 text-gray-700  dark:text-gray-400 hover:text-gray-800 hover:scale-110" />
                   </button>
                   <Notifications />
                   <ProfileMenu session={session} />
                 </span>
               </div>
             </div>
-            <main className="flex-1">
-              <div className="">
-                <div className=" py-3 mx-auto   sticky top-0  z-40 xl:flex justify-between bg-white  hidden xl:px-10  border-b items-center ">
-                  <span className="text-2xl  font-semibold text-gray-900">
+            <main className="h-screen  flex flex-col overflow-hidden  ">
+           
+                <div className=" py-3 mx-auto   z-40 xl:flex justify-between w-full bg-white dark:bg-gray-900  hidden xl:px-10   dark:border-none items-center ">
+                  <span className="text-2xl  font-semibold text-gray-900 dark:text-gray-100">
                     {props.title}
                   </span>
                   <span className=" space-x-5 flex items-center justify-center ">
                     <button>
-                      <CogIcon className="h-7 w-7 text-gray-700 hover:text-gray-800 hover:scale-110" />
+                      <CogIcon className="h-7 w-7 text-gray-700 dark:text-gray-400 hover:text-gray-800 hover:scale-110" />
                     </button>
                     <Notifications />
                     <ProfileMenu session={session} />
                   </span>
                 </div>
-                <div className="">
+              <div className={ props.overflow ? "overflow-auto scrollbar" : null}>
                   <SessionContext.Provider value={session}>
                     {props.children}
                   </SessionContext.Provider>
                   {/* /End replace */}
                 </div>
-              </div>
+             
             </main>
           </div>
         </div>
       </>
     );
   }
-  if (status === "loading") {
-    return (
-      <div className="flex items-center justify-center h-screen w-screen">
-        <img src="loading.svg"></img>
-      </div>
-    );
-  }
+  
+  
   return <Signin />;
 }
