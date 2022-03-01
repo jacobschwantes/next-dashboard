@@ -5,17 +5,16 @@ import ApexChart from "../components/LineGraph";
 import PieChart from "../components/PieChart";
 import MetricsCard from "../components/MetricCard";
 import Table from "../components/Table";
-
+import DefaultLayout from "../layouts/DefaultLayout";
+import { useSession } from "next-auth/react";
 export default function App() {
+  const { data: session, status } = useSession();
   const SLIDE_COUNT = 2;
   const slides = Array.from(Array(SLIDE_COUNT).keys());
   return (
-    <Wrapper title="Dashboard" active="dashboard">
-      <SessionContext.Consumer>
-        {(session) => (
-          <div className=" space-y-5 xl:px-10 px-4 pt-4">
-            <div className="grid lg:grid-cols-3 gap-5 grid-cols-1   ">
-              <div className=" rounded-2xl    border   border-gray-200 md:col-span-2  bg-blue-50   col-span-1 ">
+          <div className=" space-y-5 xl:px-10 px-4 py-4   overflow-auto">
+            <div className="grid lg:grid-cols-3 gap-5 grid-cols-1  ">
+              <div className=" rounded-2xl    border   border-gray-200 md:col-span-2  bg-blue-100 dark:bg-blue-200   col-span-1 ">
                 <div className=" p-10 space-y-3  flex md:justify-between justify-start items-center flex-col md:flex-row ">
                   <div className=" flex flex-col items-center md:items-start justify-center md:justify-start space-y-3 ">
                     <h1 className=" 2xl:text-3xl text-2xl font-semibold   text-gray-800 md:text-left text-center ">
@@ -38,7 +37,7 @@ export default function App() {
 
                   <img
                     className="  2xl:max-h-64 max-h-52  "
-                    src="saly-10.png"
+                    src="dashboard5.svg"
                   ></img>
                 </div>
               </div>
@@ -75,6 +74,7 @@ export default function App() {
             <div className="grid lg:grid-cols-3 grid-cols-1 gap-5  w-full">
               <div>
                 <PieChart
+                dark={false}
                   label="Sessions by Device"
                   mobileUsers={78343}
                   tabletUsers={12244}
@@ -83,17 +83,12 @@ export default function App() {
                 />
               </div>
               <div className="col-span-2">
-                <ApexChart />
+                <ApexChart dark={false} />
               </div>
             </div>
-            <div className="grid lg:grid-cols-3 grid-cols-1 gap-5  w-full">
-              <div className=" col-span-2">
-                <Table />
-              </div>
-            </div>
+          
           </div>
-        )}
-      </SessionContext.Consumer>
-    </Wrapper>
+ 
   );
 }
+App.Layout = DefaultLayout

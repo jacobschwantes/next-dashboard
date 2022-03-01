@@ -11,6 +11,7 @@ const progress = new ProgressBar({
   className: "bar-of-progress",
   delay: 100,
 });
+const Noop = ({ children }) => children
 function MyApp({ Component,  pageProps: { session, ...pageProps }, }) {
   const router = useRouter();
   useEffect(() => {
@@ -25,6 +26,7 @@ function MyApp({ Component,  pageProps: { session, ...pageProps }, }) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
+  const Layout = Component.Layout || Noop;
 
   return (
     <>
@@ -47,10 +49,20 @@ function MyApp({ Component,  pageProps: { session, ...pageProps }, }) {
         }}
       />
   <SessionProvider session={session}>
+<Layout>
+  
+
+
+      
         <Component {...pageProps} />
+    
+      </Layout>
     </SessionProvider>
     </>
   );
 }
 
 export default MyApp;
+
+
+
