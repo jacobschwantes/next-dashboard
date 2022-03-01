@@ -3,6 +3,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       minHeight : {
@@ -10,10 +11,19 @@ module.exports = {
         '350' : '348px',
         '300' : '300px',
       },
+      maxWidth: {
+        '8xl': '120rem',
+      },
+      width: {
+        xl: '25vw'
+      },
       screens: {
         '2xl': '1920px',
         '3xl': '2560px',
         'xs': '400px' 
+      },
+      height: {
+        'partial': '90vh',
       },
       keyframes: {
         'fade-in-right': {
