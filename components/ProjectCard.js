@@ -16,7 +16,7 @@ export default function ProjectCard(props) {
   return (
     <div
       className={
-        "  shadow-gray-100 rounded-lg shadow-lg border-gray-100 border flex bg-white relative animate-fade-in-up   " +
+        "  shadow-gray-100 dark:shadow-gray-900 rounded-lg shadow-lg border-gray-100 dark:border-gray-900 border flex bg-white dark:bg-gray-800 relative animate-fade-in-up   " +
         (props.grid ? " flex-col aspect-square" : " h-48 flex-row")
       }
     >
@@ -80,10 +80,10 @@ export default function ProjectCard(props) {
       >
         <div className="flex flex-col ">
           <span className=" ">
-            <h1 className="font-semibold text-2xl overflow-x-hidden ">
+            <h1 className="font-semibold text-2xl overflow-x-hidden dark:text-gray-100 ">
               {props.project.name}
             </h1>
-            <h1 className="font-medium capitalize text-gray-600 text-lg  ">
+            <h1 className="font-medium capitalize text-gray-600 dark:text-gray-300 text-lg  ">
               {props.project.category}
             </h1>
           </span>
@@ -91,14 +91,14 @@ export default function ProjectCard(props) {
           <div className="space-x-1 flex flex-wrap ">
             {props.project.tags.map((tag, index) => {
               return (
-                <span key={index} className=" items-center py-0.5 flex-col my-1   justify-center  px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                <span key={index} className=" items-center py-0.5 flex-col my-1   justify-center  px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:text-blue-400 dark:bg-blue-700 dark:bg-opacity-25">
                   {tag}
                 </span>
               );
             })}
           </div>
         </div>
-        <div className="flex flex-col w-full space-y-1 text-sm font-medium ">
+        <div className="flex flex-col w-full space-y-1 text-sm font-medium dark:text-gray-100 ">
           <div className="flex justify-between">
             <span>{percent}% Completed</span>
             <span className="  ">
@@ -109,10 +109,10 @@ export default function ProjectCard(props) {
           </div>
           <div className="flex flex-col relative">
             <span
-              className="h-1 rounded-lg bg-blue-500 absolute transition-all"
+              className="h-1 rounded-lg bg-blue-500 dark:bg-blue-700  absolute transition-all"
               style={{ width: `${percent}%` }}
             ></span>
-            <span className="w-full h-1 bg-gray-200 rounded-lg "></span>
+            <span className="w-full h-1 bg-gray-200 dark:bg-gray-600 rounded-lg "></span>
           </div>
         </div>
       </a>

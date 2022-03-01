@@ -17,7 +17,7 @@ async function postData(url = "", data = {}) {
   })
     .then(async (res) => {
       if (res.ok) {
-        return res
+        return res;
       } else {
         let text = await res.text();
         throw new Error(text);
@@ -73,16 +73,15 @@ export default function ProjectBoard(props) {
   const [state, setState] = useState([]);
 
   useEffect(() => {
-    setState(props.project.groups)
-  },[props.project])
+    setState(props.project.groups);
+  }, [props.project]);
 
   async function addGroup() {
-    let id = 
-    setState([...state, createGroup(Math.random())]);
+    let id = setState([...state, createGroup(Math.random())]);
   }
 
   function onDragEnd(result) {
-    const { source, destination } = result;
+    const { source, destination, type } = result;
     console.log(result);
     // dropped outside the list
     if (!destination) {
@@ -92,37 +91,49 @@ export default function ProjectBoard(props) {
     const dInd = +destination.droppableId;
 
     if (sInd === dInd) {
-      const items = reorder(state[sInd].tasks, source.index, destination.index);
-      const newState = [...state];
-      newState[sInd].tasks = items;
-      setState(newState);
+      if ((type = "task")) {
+        const items = reorder(
+          state[sInd].tasks,
+          source.index,
+          destination.index
+        );
+        const newState = [...state];
+        newState[sInd].tasks = items;
+        setState(newState);
+      }
     } else {
-      const result = move(
-        state[sInd].tasks,
-        state[dInd].tasks,
-        source,
-        destination
-      );
-      const newState = [...state];
-      console.log("new state before: ", newState);
-      newState[sInd].tasks = result[sInd];
-      newState[dInd].tasks = result[dInd];
-      console.log("new state after: ", newState);
+      if (type === "task") {
+        const result = move(
+          state[sInd].tasks,
+          state[dInd].tasks,
+          source,
+          destination
+        );
+        const newState = [...state];
+        console.log("new state before: ", newState);
+        newState[sInd].tasks = result[sInd];
+        newState[dInd].tasks = result[dInd];
+        console.log("new state after: ", newState);
 
-      setState(newState);
-
-
+        setState(newState);
+      }
     }
   }
 
   return (
     <div className="overflow-x-auto">
-      <DragDropContext onDragEnd={(e) => {onDragEnd(e); postData('/api/projects/updateprojectboard', {_id: props.project._id, groups: state})}}>
+      <DragDropContext
+        onDragEnd={(e) => {
+          onDragEnd(e);
+          console.log(e);
+          postData("/api/projects/updateprojectboard", {
+            _id: props.project._id,
+            groups: state,
+          });
+        }}
+      >
         <div className="flex space-x-2 items-start  ">
-
           {state.map((group, ind) => (
-            
-
             <div className="bg-gray-200 p-2 rounded-md animate-fade-in-up max-h-screen overflow-y-auto">
               <span className="flex justify-between items-center mb-2">
                 <h1 className=" font-medium capitalize text-sm"> {group.id}</h1>
@@ -131,13 +142,16 @@ export default function ProjectBoard(props) {
                     const newState = [...state];
                     newState.splice(ind, 1);
                     setState(newState);
-                    postData('/api/projects/updateprojectboard', {_id: props.project._id, groups: newState})
+                    postData("/api/projects/updateprojectboard", {
+                      _id: props.project._id,
+                      groups: newState,
+                    });
                   }}
                 >
                   <DotsHorizontalIcon className="h-5 w-5 text-gray-500" />
                 </button>
               </span>
-              <Droppable key={ind} droppableId={`${ind}`}>
+              <Droppable type="task" key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
                   <div
                     className="rounded-lg w-60 min-h-10 animate-fade-in-up  select-none    "
@@ -166,7 +180,10 @@ export default function ProjectBoard(props) {
                                   const newState = [...state];
                                   newState[ind].tasks.splice(index, 1);
                                   setState(newState);
-                                  postData('/api/projects/updateprojectboard', {_id: props.project._id, groups: newState})
+                                  postData("/api/projects/updateprojectboard", {
+                                    _id: props.project._id,
+                                    groups: newState,
+                                  });
                                 }}
                               >
                                 <PencilIcon className="text-gray-600 w-4" />
@@ -187,7 +204,10 @@ export default function ProjectBoard(props) {
                   const newState = [...state];
                   newState[ind].tasks.push(createTask());
                   setState(newState);
-                  postData('/api/projects/updateprojectboard', {_id: props.project._id, groups: newState})
+                  postData("/api/projects/updateprojectboard", {
+                    _id: props.project._id,
+                    groups: newState,
+                  });
                 }}
               >
                 <PlusIcon className="h-4 w-4 text-gray-600 mr-1" /> Add a task
@@ -199,11 +219,14 @@ export default function ProjectBoard(props) {
             className="hover:bg-gray-300 w-60 text-left px-2 py-2 rounded-md text-sm flex items-center text-gray-600 bg-gray-200 "
             type="button"
             onClick={() => {
-             addGroup();
-             const newState = [...state];
-             newState.push(createGroup(Math.random()))
-             setState(newState);
-             postData('/api/projects/updateprojectboard', {_id: props.project._id, groups: newState})
+              addGroup();
+              const newState = [...state];
+              newState.push(createGroup(Math.random()));
+              setState(newState);
+              postData("/api/projects/updateprojectboard", {
+                _id: props.project._id,
+                groups: newState,
+              });
             }}
           >
             <PlusIcon className="h-4 w-4 text-gray-600 mr-1" /> Add new group

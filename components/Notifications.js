@@ -35,7 +35,7 @@ const unread = [
 const read = [];
 export default function Notifications(props) {
   return (
-    <Menu as="div" className=" xs:relative   inline-block text-left">
+    <Menu as="div" className=" xs:relative  inline-block text-left">
       <div className="flex items-center">
         <Menu.Button className=" hover:scale-110 transition-transform ">
           <span className=" absolute z-10 bg-red-500 font-semibold text-white rounded-xl px-1 text-xs ">
@@ -43,7 +43,7 @@ export default function Notifications(props) {
           </span>
 
           <BellIcon
-            className="h-7 w-7 text-gray-700 hover:text-gray-800"
+            className="h-7 w-7 text-gray-700 dark:text-gray-400 hover:text-gray-800"
             aria-hidden="true"
           />
         </Menu.Button>
@@ -57,11 +57,11 @@ export default function Notifications(props) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className=" origin-top-right absolute w-screen left-0 xs:right-0 xs:left-auto  mt-2 xs:w-80 rounded-md  shadow-lg  bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
+        <Menu.Items className=" origin-top-right absolute w-screen left-0 xs:right-0 xs:left-auto z-10  mt-2 xs:w-80 rounded-md  shadow-lg  bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none ">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <div className=" px-4 py-2 transition-colors font-semibold flex justify-between items-center border-b">
+                <div className=" px-4 py-2 transition-colors font-semibold flex justify-between items-center border-b dark:text-gray-100 dark:border-gray-700">
                   <div className="flex flex-col ">
                     Notifications
                     <span className="text-sm text-gray-500 font-normal">
@@ -84,7 +84,7 @@ export default function Notifications(props) {
                <h1 className="font-semibold text-gray-500 text-sm px-3 py-1">NEW</h1>
                {unread.map((item, index) => {
                  return (
-                   <div key={index} className="flex items-center space-x-3 p-3 hover:bg-gray-100 bg-blue-50 cursor-pointer">
+                   <div key={index} className="flex items-center space-x-3 p-3 hover:bg-gray-100 bg-blue-50 dark:bg-blue-700 dark:hover:bg-gray-700 dark:bg-opacity-25 cursor-pointer">
                      <item.icon
                        className=
                          "flex-shrink-0 h-10 w-10 rounded-full  transition-colors text-blue-500"
@@ -94,8 +94,8 @@ export default function Notifications(props) {
                      <div className="flex flex-col space-y-1">
                        
                       
-                         <h1 className="font-semibold">
-                           {item.message + " "}<span className="font-normal text-gray-500">{item.submessage}</span>
+                         <h1 className="font-semibold dark:text-gray-200">
+                           {item.message + " "}<span className="font-normal text-gray-500 dark:text-gray-400">{item.submessage}</span>
                          </h1>
                          <h1 className="flex items-center text-gray-400 text-xs"><ClockIcon className="h-3 w-3 mr-1 text-gray-400"/> {findTime(item.timestamp)}</h1>
                          
@@ -121,7 +121,7 @@ export default function Notifications(props) {
                  <h1 className="font-semibold text-gray-500 text-sm px-3 py-1">RECENT</h1>
                  {unread.map((item, index) => {
                    return (
-                     <div key={index} className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer">
+                     <div key={index} className="flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                        <item.icon
                          className=
                            "flex-shrink-0 h-10 w-10 rounded-full  transition-colors text-blue-500"
@@ -131,8 +131,8 @@ export default function Notifications(props) {
                        <div className="flex flex-col space-y-1">
                          
                         
-                           <h1 className="font-semibold">
-                             {item.message + " "}<span className="font-normal text-gray-500">{item.submessage}</span>
+                           <h1 className="font-semibold dark:text-gray-200">
+                             {item.message + " "}<span className="font-normal text-gray-500 dark:text-gray-400">{item.submessage}</span>
                            </h1>
                            <h1 className="flex items-center text-gray-400 text-xs"><ClockIcon className="h-3 w-3 mr-1 text-gray-400"/> {findTime(item.timestamp)}</h1>
                            
@@ -154,8 +154,8 @@ export default function Notifications(props) {
                     signOut();
                   }}
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm transition-colors cursor-pointer border-t text-center"
+                    active ? "bg-gray-700 text-gray-900 dark:text-gray-300" : "text-gray-700 dark:text-gray-200",
+                    "block px-4 py-2 text-sm transition-colors cursor-pointer border-t text-center dark:border-gray-700 rounded-b-lg"
                   )}
                 >
                   View All

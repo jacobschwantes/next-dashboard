@@ -166,7 +166,8 @@ export default function ProjectModal(props) {
       if (res) {
         setLoading(false);
         props.update();
-        props.setOpen(false);  
+        props.setOpen(false);
+        props.setActive(0); 
       }
     });
   }
@@ -219,6 +220,7 @@ export default function ProjectModal(props) {
         setLoading(false);
         props.setOpen(false);  
         props.update();
+        props.setActive(0);
       }
     });
   }
