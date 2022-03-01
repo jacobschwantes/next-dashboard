@@ -13,6 +13,7 @@ export default class ApexChart extends React.Component {
 
     this.state = {
       chart: {
+        foreColor : props.dark ? '#f3f4f6': '#111827' ,
         toolbar: {
           show: true,
           offsetX: 0,
@@ -99,6 +100,7 @@ export default class ApexChart extends React.Component {
           style: {
             fontSize: "20px",
             fontWeight: 600,
+            color: props.dark ? '#f3f4f6': '#111827' ,
         
           },
         },
@@ -122,17 +124,23 @@ export default class ApexChart extends React.Component {
           offsetY: -20,
           fontSize: '14px',
           fontWeight: 600,
+          labels : {
+            colors: props.dark ? '#f3f4f6': '#111827' ,
+          }
+          
           
         },
         
         grid: {
           strokeDashArray: 3,
+          borderColor: props.dark ? '#374151': '#e5e7eb' ,
         },
         yaxis: {
           labels: {
             style: {
-              colors:  '#9699a2',
+              colors: props.dark ? '#f3f4f6': '#9ca3af' ,
               fontSize: "12px",
+
      
               fontWeight: 400,
              
@@ -140,9 +148,15 @@ export default class ApexChart extends React.Component {
           }
         },
         xaxis: {
+          axisTicks: {
+            show: false
+          },
+          axisBorder : {
+            show: false
+          },
           labels: {
             style: {
-              colors:  '#9699a2',
+              colors: props.dark ? '#f3f4f6': '#9ca3af' ,
               fontSize: "12px",
      
               fontWeight: 400,
@@ -167,12 +181,12 @@ export default class ApexChart extends React.Component {
 
   render() {
     return (
-      <div className="rounded-2xl  p-5 border shadow-lg shadow-gray-100  border-gray-100">
+      <div className="rounded-2xl  p-5 border shadow-lg shadow-gray-100 dark:shadow-gray-900 dark:border-gray-900  border-gray-100 dark:bg-gray-800">
         <Chart
           options={this.state.options}
           series={this.state.series}
           type="line"
-          height={350}
+          height={450}
         />
       </div>
     );

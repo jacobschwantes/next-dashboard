@@ -100,7 +100,7 @@ export default class BarChartSparkline extends React.Component {
         options={this.state.options}
         series={this.state.options.series}
         type={"bar"}
-        width={60}
+        width={50}
       />
     );
   }
