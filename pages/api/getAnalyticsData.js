@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { getSession } from "next-auth/react";
-import getCredentials from "./lib/db/getCredentials";
+import getCredentials from "./lib/db/getcredentials";
 import getViewId from "./lib/getViewId";
 import { refreshAccessToken } from "./lib/db/refreshAccessToken";
 export default async function handler(req, res) {

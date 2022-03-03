@@ -49,7 +49,7 @@ function MyApp({ Component,  pageProps: { session, ...pageProps }, }) {
         }}
       />
   <SessionProvider session={session}>
-<Layout>
+<Layout title={Component.Title} >
   
 
 

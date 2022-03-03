@@ -15,7 +15,8 @@ module.exports = {
         '8xl': '120rem',
       },
       width: {
-        xl: '25vw'
+        xl: '25vw',
+        '2xl': '33vw',
       },
       screens: {
         '2xl': '1920px',

@@ -152,7 +152,7 @@ export default function App() {
                       rel="noreferrer"
                       target="_blank"
                       href={`https://www.reddit.com${item.href}`}
-                      className="w-xl flex h-full snap-end items-center  justify-between rounded-2xl border border-gray-100 p-5 shadow-lg shadow-gray-100   "
+                      className="w-2xl flex h-full snap-end items-center  justify-between rounded-2xl border border-gray-100 p-5 shadow-lg shadow-gray-100   "
                     >
                       <div className="flex ">
                         <span className="mr-3 mt-2 flex flex-col items-center font-semibold">
@@ -191,9 +191,6 @@ export default function App() {
                           </span>
                         </span>
                       </div>
-                      {item.image === "self" ? null : (
-                        <img className="  " src={item.image}></img>
-                      )}
                     </a>
                   );
                 })

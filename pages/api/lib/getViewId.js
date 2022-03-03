@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { getSession } from "next-auth/react";
-import getCredentials from "./db/getCredentials";
+import getCredentials from "./db/getcredentials";
 export default async function getViewId(session) {
     const credentials = await getCredentials(session);
     if (credentials) {

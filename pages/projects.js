@@ -80,7 +80,7 @@ export default function App() {
       ? null
       : searchProjects.filter((item) => item.status === filter);
   return (
-    <div className=" flex  space-x-5 px-4 py-4 xl:px-10 ">
+    <div className=" flex  space-x-3 px-4 py-4 ">
       <ProjectModal
         setActive={setActive}
         verb="Create"
@@ -134,7 +134,7 @@ export default function App() {
           </button>
         </div>
 
-        <div className=" scrollbar black flex-1   space-y-3 overflow-auto ">
+        <div className=" scrollbar black flex-1 scrollbarY   space-y-3 overflow-auto ">
           {isLoading
             ? ["1", "2", "3", "4", "5", "6"].map((item) => {
                 return <ProjectLoadingState index={item} grid={grid} />;

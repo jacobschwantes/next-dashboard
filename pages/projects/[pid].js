@@ -14,6 +14,10 @@ import {
 } from "@heroicons/react/solid";
 import { ClockIcon, UserAddIcon, PencilIcon } from "@heroicons/react/outline";
 import Dropdown from "../../components/Dropdown";
+import { useState } from "react";
+
+import { Tab } from "@headlessui/react";
+
 const sampleTasks = [
   {
     group: "Completed",
@@ -78,6 +82,7 @@ const sampleTasks = [
         subtasks: [
           {
             task: "Wireframe design",
+            complete: true,
             priority: 2,
             members: [],
             description:
@@ -85,6 +90,7 @@ const sampleTasks = [
           },
           {
             task: "get approval for base endpoints",
+            complete: true,
             priority: 3,
             members: [
               {
@@ -134,12 +140,61 @@ const PriorityTag = (props) => {
 };
 export default function App() {
   const router = useRouter();
+  let [categories] = useState({
+    Recent: [
+      {
+        id: 1,
+        title: "Does drinking coffee make you smarter?",
+        date: "5h ago",
+        commentCount: 5,
+        shareCount: 2,
+      },
+      {
+        id: 2,
+        title: "So you've bought coffee... now what?",
+        date: "2h ago",
+        commentCount: 3,
+        shareCount: 2,
+      },
+    ],
+    Popular: [
+      {
+        id: 1,
+        title: "Is tech making coffee better or worse?",
+        date: "Jan 7",
+        commentCount: 29,
+        shareCount: 16,
+      },
+      {
+        id: 2,
+        title: "The most innovative things happening in coffee",
+        date: "Mar 19",
+        commentCount: 24,
+        shareCount: 12,
+      },
+    ],
+    Trending: [
+      {
+        id: 1,
+        title: "Ask Me Anything: 10 answers to your questions about coffee",
+        date: "2d ago",
+        commentCount: 9,
+        shareCount: 5,
+      },
+      {
+        id: 2,
+        title: "The worst advice we've ever heard about coffee",
+        date: "4d ago",
+        commentCount: 1,
+        shareCount: 2,
+      },
+    ],
+  });
   const { pid } = router.query;
   console.log(pid);
   const { project, isLoading, error } = useProject(`?id=${pid}`);
-
   return (
-    <div className="space-y-5 overflow-auto px-4 py-4   xl:px-10 ">
+    <div className="scrollbar black scrollbarY h-partial space-y-5 overflow-auto px-4 py-4  xl:px-10 ">
       <Breadcrumbs
         pages={[
           { name: "Projects", href: "/projects", current: false },
@@ -150,7 +205,69 @@ export default function App() {
           },
         ]}
       />
-      <dl className="mt-6  w-1/2">
+      <div className="w-full max-w-md px-2 py-16 sm:px-0">
+        <Tab.Group>
+          <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+            {Object.keys(categories).map((category) => (
+              <Tab
+                key={category}
+                className={({ selected }) =>
+                  classNames(
+                    "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700",
+                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
+                    selected
+                      ? "bg-white shadow"
+                      : "text-blue-100 hover:bg-white/[0.12] hover:text-white"
+                  )
+                }
+              >
+                {category}
+              </Tab>
+            ))}
+          </Tab.List>
+          <Tab.Panels className="mt-2">
+            {Object.values(categories).map((posts, idx) => (
+              <Tab.Panel
+                key={idx}
+                className={classNames(
+                  "rounded-xl bg-white p-3",
+                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2"
+                )}
+              >
+                <ul>
+                  {posts.map((post) => (
+                    <li
+                      key={post.id}
+                      className="hover:bg-coolGray-100 relative rounded-md p-3"
+                    >
+                      <h3 className="text-sm font-medium leading-5">
+                        {post.title}
+                      </h3>
+
+                      <ul className="text-coolGray-500 mt-1 flex space-x-1 text-xs font-normal leading-4">
+                        <li>{post.date}</li>
+                        <li>&middot;</li>
+                        <li>{post.commentCount} comments</li>
+                        <li>&middot;</li>
+                        <li>{post.shareCount} shares</li>
+                      </ul>
+
+                      <a
+                        href="#"
+                        className={classNames(
+                          "absolute inset-0 rounded-md",
+                          "ring-blue-400 focus:z-10 focus:outline-none focus:ring-2"
+                        )}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </Tab.Panel>
+            ))}
+          </Tab.Panels>
+        </Tab.Group>
+      </div>
+      <dl className="mt-6  w-2/3 ">
         {sampleTasks.map((item) => (
           <Disclosure as="div" key={item.group} className="pt-6 ">
             {({ open }) => (
@@ -189,7 +306,17 @@ export default function App() {
                     {item.tasks.map((taskItem) => {
                       return (
                         <div className="flex space-x-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-lg shadow-gray-100  ">
-                          <span className="mt-2 h-5 w-5 rounded-full border-2 border-gray-400  p-2 "></span>
+                          <input
+                            checked={taskItem.subtasks.every(
+                              (item) => item.complete
+                            )}
+                            id="candidates"
+                            aria-describedby="candidates-description"
+                            name="candidates"
+                            type="checkbox"
+                            className="mt-2 h-6 w-6 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
+                          />
+
                           <div className="flex-1">
                             <div className="mb-3">
                               <div className=" flex items-center justify-between   ">
@@ -200,8 +327,13 @@ export default function App() {
                                   <Dropdown
                                     icon={PencilIcon}
                                     title="Priority"
-                                    active='High'
-                                    options={[ {option: "Low"}, {option: "Normal"},{ option: "High" }, {option: "Urgent"}]}
+                                    active="High"
+                                    options={[
+                                      { option: "Low" },
+                                      { option: "Normal" },
+                                      { option: "High" },
+                                      { option: "Urgent" },
+                                    ]}
                                   />
                                   <button className="rounded-lg border-2 border-gray-200 p-1.5 text-gray-700">
                                     <DotsHorizontalIcon className="h-5 w-5" />
@@ -228,7 +360,13 @@ export default function App() {
                                       <>
                                         <dt className="flex w-full items-center justify-between text-lg ">
                                           <div className="flex items-center space-x-3">
-                                            <span className="mt-1 h-5 w-5 rounded-full border-2 border-gray-400  p-2 "></span>
+                                            <input
+                                              id="candidates"
+                                              aria-describedby="candidates-description"
+                                              name="candidates"
+                                              type="checkbox"
+                                              className="h-6 w-6 rounded-full border-gray-300  text-blue-600 focus:ring-blue-500"
+                                            />
 
                                             <span className="font-medium capitalize text-gray-600 ">
                                               {subTaskItem.task}
@@ -246,16 +384,21 @@ export default function App() {
                                             </Disclosure.Button>
                                           </div>
                                           <div className=" flex items-center space-x-2">
-                                  <Dropdown
-                                    icon={PencilIcon}
-                                    title="Priority"
-                                    active='High'
-                                    options={[ {option: "Low"}, {option: "Normal"}, { option: "High" },{option: "Urgent"}]}
-                                  />
-                                  <button className="rounded-lg border-2 border-gray-200 p-1.5 text-gray-700">
-                                    <DotsHorizontalIcon className="h-5 w-5" />
-                                  </button>
-                                </div>
+                                            <Dropdown
+                                              icon={PencilIcon}
+                                              title="Priority"
+                                              active="High"
+                                              options={[
+                                                { option: "Low" },
+                                                { option: "Normal" },
+                                                { option: "High" },
+                                                { option: "Urgent" },
+                                              ]}
+                                            />
+                                            <button className="rounded-lg border-2 border-gray-200 p-1.5 text-gray-700">
+                                              <DotsHorizontalIcon className="h-5 w-5" />
+                                            </button>
+                                          </div>
                                         </dt>
                                         <Disclosure.Panel
                                           as="dd"
