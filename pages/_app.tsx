@@ -1,6 +1,7 @@
-import '../styles/globals.css'
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
 import ProgressBar from "@badrap/bar-of-progress";
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react";
 import { useEffect } from "react";
 import Script from "next/script";
 import { useRouter } from "next/router";
@@ -11,21 +12,22 @@ const progress = new ProgressBar({
   className: "bar-of-progress",
   delay: 100,
 });
-const Noop = ({ children }) => children
-function MyApp({ Component,  pageProps: { session, ...pageProps }, }) {
+const Noop = ({ children }) => children;
+function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url) => {
       gtag.pageview(url);
     };
-    router.events.on("routeChangeComplete", handleRouteChange); 
+    router.events.on("routeChangeComplete", handleRouteChange);
     router.events.on("routeChangeStart", progress.start);
     router.events.on("routeChangeError", progress.finish);
-    router.events.on("routeChangeComplete", progress.finish); 
+    router.events.on("routeChangeComplete", progress.finish);
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
+  
   const Layout = Component.Layout || Noop;
 
   return (
@@ -48,21 +50,13 @@ function MyApp({ Component,  pageProps: { session, ...pageProps }, }) {
           `,
         }}
       />
-  <SessionProvider session={session}>
-<Layout title={Component.Title} >
-  
-
-
-      
-        <Component {...pageProps} />
-    
-      </Layout>
-    </SessionProvider>
+      <SessionProvider session={pageProps.session}>
+        <Layout title={Component.Title}>
+          <Component {...pageProps} />
+        </Layout>
+      </SessionProvider>
     </>
   );
 }
 
-export default MyApp;
-
-
-
+export default App;
