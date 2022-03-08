@@ -3,7 +3,6 @@ import { MongoClient } from "mongodb";
 import { getSession } from "next-auth/react";
 export default async function handler (req, res) {
   const session = await getSession({ req });
-
   if (session) {
     const url = process.env.MONGODB_URI;
     const client = new MongoClient(url);
