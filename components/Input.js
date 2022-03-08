@@ -2,7 +2,7 @@ import { SearchIcon } from '@heroicons/react/solid'
 
 export default function Input(props) {
   return (
-      <div className="flex-1 relative rounded-lg shadow-sm flex items-center dark:bg-gray-900">
+      <div className={"relative rounded-lg shadow-sm flex items-center dark:bg-gray-900" + (props.expand ? " flex-1" : null)}>
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>

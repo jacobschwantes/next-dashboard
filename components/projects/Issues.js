@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Pagination from "../Pagintation";
-
+import Input from "../Input";
+import { PlusIcon } from "@heroicons/react/solid";
 export default function Issues(props) {
+  const [search, setSearch] = useState('');
   const data = Array(17).fill().map(Math.random);
   const batchSize = 5; // items per chunk
   const pages = data.reduce((resultArray, item, index) => {
@@ -20,6 +22,25 @@ export default function Issues(props) {
 
   return (
     <div>
+      <div className=" flex items-center justify-between  space-x-2 ">
+          <Input
+            expand={false}
+            setInput={setSearch}
+            value={search}
+            type="search"
+            name="search"
+            id="search"
+            placeholder="Search"
+          />
+          <button
+            onClick={() => setOpen(true)}
+            type="button"
+            className="flex  items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <PlusIcon className="mr-1 h-4" />
+            New Issue
+          </button>
+        </div>
       <div className=" flex flex-col">
         {pages[active - 1].map((item) => {
           return (

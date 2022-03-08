@@ -117,6 +117,7 @@ export default function App() {
       <div className=" h-partial 3xl:w-1/4 flex w-full flex-col space-y-2 overflow-hidden rounded-2xl border border-gray-100   bg-white p-6 shadow-lg shadow-gray-100 dark:bg-gray-900 lg:w-1/3 ">
         <div className=" flex items-center justify-between  space-x-2 ">
           <Input
+            expand={true}
             setInput={setSearch}
             value={search}
             type="search"
