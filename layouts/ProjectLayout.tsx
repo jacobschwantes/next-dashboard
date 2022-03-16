@@ -91,6 +91,10 @@ export default function App({ children }) {
     }
     return (
       <>
+      <Head>
+        <title>next-dashboard</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
         <div className=" flex items-center justify-between  ">
           <Transition.Root show={sidebarOpen} as={Fragment}>
             <Dialog

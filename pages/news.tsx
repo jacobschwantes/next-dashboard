@@ -11,7 +11,7 @@ import {
 } from "@heroicons/react/solid";
 import { useRef } from "react";
 import ArticleFooter from "../components/articles/ArticleFooter";
-import ArticleTags from "../components/articles/ArticleTags.tdsx";
+import ArticleTags from "../components/articles/ArticleTags";
 export default function App() {
   const redditSlider = useRef();
   const { data: session, status } = useSession();

@@ -7,6 +7,7 @@ import Navigation from "../components/Navigation";
 import Notifications from "../components/Notifications";
 import ProfileMenu from "../components/ProfileMenu";
 import { useRouter } from "next/router";
+import Head from "next/head";
 const scrollPages = ['/', '/cms'];
 
 export default ({ children }) => {
@@ -30,6 +31,10 @@ if (status === "loading") {
   if (status === "authenticated") {
     return (
       <>
+      <Head>
+        <title>next-dashboard</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
         <div className=" flex items-center justify-between  ">
           <Transition.Root show={sidebarOpen} as={Fragment}>
             <Dialog
@@ -95,7 +100,7 @@ if (status === "loading") {
             {/* Sidebar component, swap this element with another sidebar if you like */}
             <Navigation setWideNav={setWideNav} wideNav={wideNav} session={session} active={router.pathname} />
           </div>
-          <div className={" transition-all h-screen flex flex-col overflow-hidden flex-1  " + (wideNav ? " xl:pl-64 " : " xl:pl-24")}>
+          <div className={" transition-all h-screen flex flex-col overflow-hidden flex-1  " + (wideNav ? "  " : " xl:pl-24")}>
             <div className="sticky top-0  xl:hidden sm:pl-3 sm:pt-3 dark:bg-gray-900 bg-white  flex justify-between items-center p-2">
               <span>
                 <button
