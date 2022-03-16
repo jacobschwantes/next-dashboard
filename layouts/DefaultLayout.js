@@ -14,6 +14,7 @@ const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session, status } = useSession();
   const [wideNav, setWideNav] = useState(false);
+  
 const getTitle = () => {
     const path = router.asPath.replace('/', '');
     return path === '' ? 'dashboard' : path;

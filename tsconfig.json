@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "layouts/ProjectLayout.tsx", "layouts/DefaultLayout.js", "components/Navigation.js"  ],
   "exclude": [
     "node_modules"
   ]

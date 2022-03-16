@@ -37,7 +37,7 @@ const PriorityTag = (props) => {
 export default function TaskBoard(props) {
   console.log(props);
   return (
-    <dl className="mt-6  w-2/3 ">
+    <dl className="mt-6  2xl:w-2/3 ">
       {props.data.tasks.map((item) => (
         <Disclosure as="div" key={item.group} className="pt-6 ">
           {({ open }) => (

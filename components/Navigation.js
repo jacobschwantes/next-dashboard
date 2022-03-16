@@ -80,7 +80,7 @@ export default function Navigation(props) {
   return (
     <div
       className={
-        "  group-hover:w-72     scrollbar white hover:black  flex min-h-0  flex-1 flex-col overflow-y-auto overflow-x-hidden  border-gray-200  bg-white bg-opacity-80 px-4 backdrop-blur-sm transition-all dark:border-gray-800 dark:bg-gray-900 " +
+        "  group-hover:w-72     scrollbar white hover:black  flex min-h-0  flex-1 flex-col overflow-y-auto overflow-x-hidden  border-gray-200  bg-white group-hover:bg-opacity-80  px-4 backdrop-blur-sm transition-transform dark:border-gray-800 dark:bg-gray-900 " +
         (props.wideNav
           ? " items-start w-72"
           : " items-center group-hover:items-start")
@@ -127,6 +127,7 @@ export default function Navigation(props) {
                 }
               ><span className="flex">
                 <img
+                
                   src={props.session.user.image}
                   className={
                     " h-10 w-10 rounded-full " +
@@ -143,7 +144,7 @@ export default function Navigation(props) {
                     {props.session.user.name}
                   </h1>
                   <h1 className="text-sm text-gray-600 dark:text-gray-400">
-                    {props.session.user.email}
+                    {props.session.user.email.length > 16 ? (props.session.user.email.slice(0, 16) + '...') : props.session.user.email}
                   </h1>
                 </span></span>
                 
