@@ -1,22 +1,13 @@
 import {
-  BookOpenIcon,
   ChartBarIcon,
-  DotsHorizontalIcon,
   ExternalLinkIcon,
   PlusIcon,
-  ViewGridIcon,
-  ViewListIcon,
 } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
 import DefaultLayout from "../layouts/DefaultLayout";
-import CircleProgress from "../components/CircleProgress";
 import Input from "../components/Input";
-import Wrapper, { SessionContext } from "../components/Wrapper";
 import { useState } from "react";
-import Dropdown from "../components/Dropdown";
 import ProjectModal from "../components/ProjectModal";
-import ProjectDropdown from "../components/ProjectDropdown";
-import DeleteModal from "../components/DeleteModal";
 import ProjectCard from "../components/ProjectCard2";
 import { useProjects } from "../lib/utils";
 import useSWR, { useSWRConfig } from "swr";
@@ -62,21 +53,21 @@ export default function App() {
   const { data: session, status } = useSession();
   const [slideOpen, setSlideOpen] = useState(false);
   const { mutate } = useSWRConfig();
-  const { projects, isLoading, error } = useProjects();
+  const { projects, isLoading, isError } = useProjects();
   const [active, setActive] = useState(0);
   const [filter, setFilter] = useState(null);
   const [grid, setGrid] = useState(true);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   let searchProjects =
-    isLoading || error
+    isLoading || isError
       ? null
       : projects.filter((item) => {
           let lowercase = item.name.toLowerCase();
           return lowercase.includes(search);
         });
   let filteredProjects =
-    isLoading || error
+    isLoading || isError
       ? null
       : searchProjects.filter((item) => item.status === filter);
   return (
