@@ -203,7 +203,7 @@ export default function App() {
                         {/* Replace with your content */}
 
                         <div className="       ">
-                          {isLoading || error ? null : (
+                          {isLoading || isError ? null : (
                             <div className="flex flex-col overflow-hidden    bg-white dark:border-gray-800 dark:bg-gray-900 lg:pb-14  ">
                               <div className="flex items-center justify-between bg-blue-200 p-10 ">
                                 <div className="flex items-center space-x-6">
@@ -269,7 +269,7 @@ export default function App() {
       ) : null}
 
       <div className=" lg:w-2/3  2xl:w-3/4     ">
-        {isLoading || error || searchProjects.length === 0 ? null : (
+        {isLoading || isError || searchProjects.length === 0 ? null : (
           <div className="h-partial    hidden flex-col overflow-hidden rounded-2xl border border-l border-gray-100 bg-white pb-14 shadow-lg shadow-gray-100 lg:flex ">
             <div
               className={
