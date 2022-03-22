@@ -15,7 +15,7 @@ import ProjectLoadingState from "../components/ProjectLoadingState";
 import TaskTable from "../components/TaskTable";
 import { Fragment } from "react";
 import { Dialog, Transition, Disclosure } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
+import { ArrowLeftIcon, XIcon } from "@heroicons/react/outline";
 async function getLoadingStates() {
   return ["1", "2", "3", "4", "5", "6"];
 }
@@ -71,7 +71,7 @@ export default function App() {
       ? null
       : searchProjects.filter((item) => item.status === filter);
   return (
-    <div className=" flex  space-x-3 px-4 py-4 ">
+    <div className=" flex  md:space-x-3 md:px-4 px-2 py-4 ">
       <ProjectModal
         setActive={setActive}
         verb="Create"
@@ -105,7 +105,7 @@ export default function App() {
           },
         }}
       />
-      <div className=" h-partial 3xl:w-1/4 flex w-full flex-col space-y-2 overflow-hidden rounded-2xl border border-gray-100   bg-white p-6 shadow-lg shadow-gray-100 dark:bg-gray-900 lg:w-1/3 ">
+      <div className=" flex h-partial w-full flex-col space-y-2 overflow-hidden rounded-2xl border border-gray-100 bg-white   md:p-6 p-4 shadow-lg shadow-gray-100 dark:bg-gray-900 lg:w-1/3 3xl:w-1/4 ">
         <div className=" flex items-center justify-between  space-x-2 ">
           <Input
             expand={true}
@@ -126,7 +126,7 @@ export default function App() {
           </button>
         </div>
 
-        <div className=" scrollbar black flex-1 scrollbarY   space-y-3 overflow-auto ">
+        <div className=" scrollbar black scrollbarY flex-1   space-y-3 overflow-auto ">
           {isLoading
             ? ["1", "2", "3", "4", "5", "6"].map((item) => {
                 return <ProjectLoadingState index={item} grid={grid} />;
@@ -163,7 +163,7 @@ export default function App() {
         <Transition.Root show={slideOpen} as={Fragment}>
           <Dialog
             as="div"
-            className="fixed inset-0 overflow-hidden lg:hidden"
+            className="fixed inset-0 z-50 overflow-hidden lg:hidden"
             onClose={setSlideOpen}
           >
             <div className="absolute inset-0 overflow-hidden ">
@@ -182,21 +182,21 @@ export default function App() {
                   <div className="w-screen max-w-2xl">
                     <div className="relative flex h-full  flex-col bg-white ">
                       <div className="absolute top-4 left-0 right-0 z-20 px-4 sm:px-6">
-                        <div className="flex items-start justify-between">
-                          <div className="ml-3 flex h-7 items-center">
+                        <div className="flex items-start space-x-2">
+                          <div className=" flex h-7 items-center">
                             <button
                               type="button"
-                              className=" rounded-md bg-gray-50 text-gray-600 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                              className=" rounded-md  text-white hover:text-gray-500 "
                               onClick={() => {
                                 setSlideOpen(false);
-                                setActive(0);
+                               
                               }}
                             >
                               <span className="sr-only">Close panel</span>
                               <XIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                           </div>{" "}
-                          <Dialog.Title className="text-lg font-medium text-gray-500"></Dialog.Title>
+                          
                         </div>
                       </div>
                       <div className=" relative flex-1 ">
@@ -204,54 +204,84 @@ export default function App() {
 
                         <div className="       ">
                           {isLoading || isError ? null : (
-                            <div className="flex flex-col overflow-hidden    bg-white dark:border-gray-800 dark:bg-gray-900 lg:pb-14  ">
-                              <div className="flex items-center justify-between bg-blue-200 p-10 ">
+                            <div className="flex flex-col overflow-hidden h-screen    bg-white dark:border-gray-800 dark:bg-gray-900 lg:pb-14  ">
+                              <div
+                                className={
+                                  "flex items-center justify-between p-10 " +
+                                  (searchProjects.length > 0
+                                    ? searchProjects[active].theme.bgColor
+                                    : null)
+                                }
+                              >
                                 <div className="flex items-center space-x-6">
-                                  <div
-                                    className={
-                                      " flex h-16  w-16 items-center justify-center rounded-full bg-blue-600 " +
-                                        searchProjects.length >
-                                      0
-                                        ? searchProjects[active].theme.bgColor
-                                        : ""
-                                    }
-                                  >
-                                    <ChartBarIcon className="h-8 text-white" />
-                                  </div>
                                   <span className="">
-                                    <h1 className="text-3xl font-semibold  dark:text-gray-100">
+                                    <h1 className="text-3xl font-semibold text-white  ">
                                       {searchProjects.length > 0
                                         ? searchProjects[active].name
                                         : null}
                                     </h1>
-                                    <h1 className="text-2xl font-medium capitalize text-gray-600 dark:text-gray-300">
+                                    <h1 className="text-2xl font-medium capitalize text-white dark:text-gray-300">
                                       {searchProjects.length > 0
                                         ? searchProjects[active].category
                                         : null}
                                     </h1>
                                   </span>
                                 </div>
-                                <button className=" flex items-center rounded-full bg-gray-700 px-3  py-1 text-lg font-medium text-gray-50 ">
+                                <a
+                                  href={
+                                    searchProjects.length > 0
+                                      ? `/projects/${searchProjects[active]._id}`
+                                      : null
+                                  }
+                                  className=" flex items-center rounded-full bg-gray-50 px-4 py-1   text-lg font-medium hover:bg-gray-200 "
+                                >
                                   View <ExternalLinkIcon className="ml-1 h-5" />
-                                </button>
+                                </a>
                               </div>
-                              <div className=" space-y-6 px-4 py-6  ">
-                                <h1 className="text-2xl font-semibold ">
-                                  Project Overview
-                                </h1>
-                                <p className="text-gray-500">
-                                  {searchProjects.length > 0
-                                    ? searchProjects[active].description
-                                    : null}
-                                </p>
-                                <h1 className="text-2xl font-semibold ">
-                                  Objective List
-                                </h1>
-                              </div>
-                              <div className=" flex-1 overflow-auto px-4">
-                                {searchProjects.length > 0 ? (
-                                  <TaskTable project={searchProjects[active]} />
-                                ) : null}
+                              <div className="overflow-auto">
+                                <div className="space-y-6 px-4 py-6   ">
+                                  <h1 className="text-2xl font-semibold ">
+                                    Project Overview
+                                  </h1>
+                                  <p className="text-gray-500">
+                                    {searchProjects.length > 0
+                                      ? searchProjects[active].description
+                                      : null}
+                                  </p>
+                                  <Disclosure
+                                  
+                                    as="div"
+                                    className=" "
+                                  >
+                                    {({ open }) => (
+                                      <>
+                                        <dt className="flex w-full items-center justify-between text-lg ">
+                                          <div className="flex items-center space-x-3">
+                                            <h1 className="text-2xl font-semibold ">
+                                              Objective List
+                                            </h1>
+
+                                            <Disclosure.Button>
+                                              <h1 className=" text-base font-medium text-blue-700">
+                                                {open ? "Hide" : "Show"}
+                                              </h1>
+                                            </Disclosure.Button>
+                                          </div>
+                                        </dt>
+
+                                        <Disclosure.Panel as="dd" className="">
+                                          <p className="pt-1 text-base text-gray-500">
+                                            {searchProjects.length > 0 ? (
+                                              <TaskTable
+                                                project={searchProjects[active]}
+                                              />
+                                            ) : null}
+                                          </p>
+                                        </Disclosure.Panel>
+                                      </>
+                                    )}
+                                  </Disclosure>
+                                </div>
                               </div>
                             </div>
                           )}
@@ -270,7 +300,7 @@ export default function App() {
 
       <div className=" lg:w-2/3  2xl:w-3/4     ">
         {isLoading || isError || searchProjects.length === 0 ? null : (
-          <div className="h-partial    hidden flex-col overflow-hidden rounded-2xl border border-l border-gray-100 bg-white pb-14 shadow-lg shadow-gray-100 lg:flex ">
+          <div className="hidden    h-partial flex-col overflow-hidden rounded-2xl border border-l border-gray-100 bg-white pb-14 shadow-lg shadow-gray-100 lg:flex ">
             <div
               className={
                 "flex items-center justify-between p-10 " +
@@ -317,7 +347,6 @@ export default function App() {
                     <>
                       <dt className="flex w-full items-center justify-between text-lg ">
                         <div className="flex items-center space-x-3">
-
                           <h1 className="text-2xl font-semibold ">
                             Objective List
                           </h1>
@@ -328,17 +357,13 @@ export default function App() {
                             </h1>
                           </Disclosure.Button>
                         </div>
-
-                  
                       </dt>
-                      
-     
+
                       <Disclosure.Panel as="dd" className="">
                         <p className="pt-1 text-base text-gray-500">
-                            {searchProjects.length > 0 ? (
-                              <TaskTable project={searchProjects[active]} />
-                            ) : null}
-                         
+                          {searchProjects.length > 0 ? (
+                            <TaskTable project={searchProjects[active]} />
+                          ) : null}
                         </p>
                       </Disclosure.Panel>
                     </>

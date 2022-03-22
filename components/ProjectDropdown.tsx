@@ -23,6 +23,7 @@ export default function ProjectDropdown(props) {
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className=" hover:scale-110 transition-transform   rounded-full hover:brightness-90  ">
+    
           <DotsHorizontalIcon
             className={"h-6 text-gray-500 " + (props.grid ? "" : "text-gray-800")}
           />

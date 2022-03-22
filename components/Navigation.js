@@ -252,7 +252,7 @@ export default function Navigation(props) {
       </Menu>
 
       <div className="w-full flex-1   ">
-        <Pages wideNav={props.wideNav} active={props.active} />
+        <Pages setOpen={props.setOpen} wideNav={props.wideNav} active={props.active} />
       </div>
     </div>
   );

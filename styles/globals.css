@@ -22,6 +22,7 @@
 }
 
 .embla__container {
+ 
   display: flex;
   user-select: none;
   -webkit-touch-callout: none;

@@ -9,7 +9,7 @@ function classNames(...classes) {
   }
 export default function ProfileMenu(props) {
   return (
-    <Menu as="div" className="relative inline-block text-left ">
+    <Menu as="div" className="relative inline-block text-left z-50 ">
       <div >
         <Menu.Button className=" hover:scale-110 transition-transform   rounded-full hover:brightness-90  ">
           
@@ -26,7 +26,7 @@ export default function ProfileMenu(props) {
         leaveTo="transform opacity-0 scale-95"
       >
     
-        <Menu.Items className=" origin-top-right absolute right-0 mt-2 w-52 rounded-lg  shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
+        <Menu.Items className="z-50 origin-top-right absolute right-0 mt-2 w-52 rounded-lg  shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
          
           <Menu.Item>
               {({ active }) => (
@@ -34,7 +34,7 @@ export default function ProfileMenu(props) {
                  
                   className=
              
-                    " px-5 py-3 text-sm transition-colors flex flex-col border-b  "
+                    " px-5 py-3 text-sm transition-colors flex flex-col border-b z-50 "
       
                 >
                   <span className=" font-semibold ">

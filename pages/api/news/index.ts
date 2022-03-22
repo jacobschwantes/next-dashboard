@@ -1,9 +1,6 @@
-import { getSession } from "next-auth/react";
 import { Article, RedditPost } from "../../../types/news";
 
 export default async function handler(req, res) {
-  const session = await getSession({ req });
-  if (session) {
     const redditPosts = await fetch(
       "https://www.reddit.com/r/webdev/hot.json?limit=10"
     )
@@ -49,11 +46,8 @@ export default async function handler(req, res) {
         tags: article.tag_list,
         author: article.user,
       };
-      console.log(parsed);
       articles.push(parsed);
     });
     res.status(200).json({ posts, articles });
-  } else {
-    res.status(400).send("unauthorized");
-  }
+ 
 }

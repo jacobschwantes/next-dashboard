@@ -75,6 +75,7 @@ export default function Pages(props) {
           <Link href={item.href}>
            
             <a
+              onClick={() => {props.setOpen(false)}}
               key={item.name}
               className={classNames(
                 item.current
