@@ -95,5 +95,17 @@ export default function App({news}) {
 }
 
 
-
+export async function getStaticProps() {
+  const res = await fetch('https://dashboard.jasch.dev/api/news')
+  const news = await res.json()
+  return {
+    props: {
+      news,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
 App.Layout = DefaultLayout;
