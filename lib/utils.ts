@@ -17,7 +17,7 @@ const fetcher = async (url, params = "") => {
 };
 export function useAnalytics() {
   const { data, error } = useSWR(`/api/analytics`, fetcher, {
- 
+    dedupingInterval: 30000
   });
   return {
     report: data,
@@ -44,7 +44,7 @@ export function useProject(params) {
 }
 
 export function useNews() {
-  const {data, error} = useSWR("/api/news", fetcher);
+  const {data, error} = useSWR("/api/news", fetcher, {dedupingInterval: 60000});
   return {
     news: data,
     isLoading: !error && !data,
