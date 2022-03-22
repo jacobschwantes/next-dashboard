@@ -96,7 +96,7 @@ export default function App({news}) {
 
 
 export async function getStaticProps() {
-  const res = await fetch('http://localhost:3000/api/news')
+  const res = await fetch('https://dashboard.jasch.dev/api/news')
   const news = await res.json()
   return {
     props: {
