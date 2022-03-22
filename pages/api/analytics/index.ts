@@ -48,7 +48,6 @@ export default async function handler(req, res) {
           
       },
     });
-    console.log(report)
     let timestamp = new Date(Date.now());
     console.log(timestamp.toLocaleDateString(), timestamp.toLocaleTimeString() , '- analytics data refreshed');
     const cleanReport = report.data.rows[0].metricValues;
@@ -112,7 +111,7 @@ async function getViewId(session) {
         access_token: accessToken,
         refresh_token: refreshToken,
       });
-
+      
       const googleClient = google.analytics({ auth, version: "v3" });
       const summary = await googleClient.management.accountSummaries.list();
       return summary ? summary.data.items[1].webProperties[0].profiles[0].id : null

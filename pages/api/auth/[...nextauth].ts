@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import clientPromise from "../../../lib/db/mongodb";
 
 export default NextAuth({
@@ -16,12 +16,11 @@ export default NextAuth({
         params: {
           scope:
             "https://www.googleapis.com/auth/analytics.readonly profile email ",
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
+        
         },
       },
       profile(profile) {
+        console.log(profile)
         return {
           id: profile.sub,
           name: profile.name,
@@ -50,6 +49,13 @@ export default NextAuth({
           .findOne({ email: user.email });
         if (authorized) {
           console.log(authorized);
+          const filter = { userId: new ObjectId(user.id)}
+          const updateDoc = {
+            $set: {
+              access_token: account.access_token,
+            },
+          };
+          await client.db("users").collection("accounts").updateOne(filter, updateDoc);
           return true;
         } else {
           console.log(authorized);
