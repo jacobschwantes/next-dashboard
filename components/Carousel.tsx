@@ -2,14 +2,35 @@ import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-const options = { delay: 5000, stopOnMouseEnter: true, stopOnInteraction: false }; // Options
+import Link from "next/link";
+const options = {
+  delay: 5000,
+  stopOnMouseEnter: true,
+  stopOnInteraction: false,
+}; // Options
 const autoplayRoot = (emblaRoot) => emblaRoot.parentElement; // Root node
 const autoplay = Autoplay(options, autoplayRoot);
 
 const media = [
-  { title: "Ethereum hits new highs", subtitle: "Prices soared to more than $4,000 on wednesday.", src: "media1.jpg" },
-  { title: "Building permits blocked", subtitle: "Sky rise permits in north Chicago were blocked by Gov. Newson.dsfsdfdsfsdfsdfsdfsdfsdfsdf", src: "media2.jpg" },
-  { title: "Technology REST API", subtitle: "Get tech prices, news, and more.", src: "media3.jpg" },
+  {
+    heading: "breaking news",
+    title: "Ethereum hits new highs",
+    subtitle: "Prices soared to more than $4,000 on wednesday.",
+    src: "media1.jpg",
+  },
+  {
+    heading: "trending on r/webdev",
+    title: "Building permits blocked",
+    subtitle:
+      "Sky rise permits in north Chicago were blocked by Gov. Newson.dsfsdfdsfsdfsdfsdfsdfsdfsdf",
+    src: "media2.jpg",
+  },
+  {
+    heading: "Popular on dev.to",
+    title: "Technology REST API",
+    subtitle: "Get tech prices, news, and more.",
+    src: "media3.jpg",
+  },
 ];
 
 const DotButton = ({ selected, onClick }) => (
@@ -44,7 +65,8 @@ const NextButton = ({ enabled, onClick }) => (
   </button>
 );
 
-const EmblaCarousel = ({ slides }) => {
+const EmblaCarousel = (props) => {
+
   const [viewportRef, embla] = useEmblaCarousel(
     { skipSnaps: false, loop: true, speed: 10 },
     [autoplay]
@@ -77,7 +99,7 @@ const EmblaCarousel = ({ slides }) => {
 
   return (
     <>
-      <div className="embla">
+      <div className="embla ">
         <div className="embla__dots">
           {scrollSnaps.map((_, index) => (
             <DotButton
@@ -87,22 +109,54 @@ const EmblaCarousel = ({ slides }) => {
             />
           ))}
         </div>
-        <div className="embla__viewport" ref={viewportRef}>
+        <div className="embla__viewport "  ref={viewportRef}>
           <div className="embla__container">
-            {media.map((slide, index) => (
+            {props.slides.map((slide, index) => (
               <div className="embla__slide" key={index}>
-                 
-                <div className="relative  overflow-hidden h-auto min-h-300 2xl:min-h-350 truncate">
-                    <span className="z-40 absolute bottom-5 left-5 space-y-1 ">
-                    <h1 className={"text-gray-300  font-semibold text-sm  uppercase"+(selectedIndex === index ? " animate-fade-in-right-fast " : "invisible")}>breaking news</h1>
-                     <h1 className={"text-white text-xl font-medium truncate"+(selectedIndex === index ? " animate-fade-in-right " : "invisible")}>{slide.title}</h1>
-                    <p className={"text-gray-50 truncate text-sm"+(selectedIndex === index ? " animate-fade-in-right-slow " : "invisible")}>{slide.subtitle}</p></span>
-                  <img
-                    className="embla__slide__img brightness-75  transition-all cursor-pointer"
-                    src={slide.src}
-                    alt="A cool cat."
-                  />
-                </div>
+                <Link href={slide.href}>
+                  <a target="_blank" ref="noreferer">
+                    <div className="min-h-300  2xl:min-h-350 relative h-auto overflow-hidden truncate ">
+                      <span className="truncate absolute bottom-5 left-5 z-20 space-y-1 sm:max-w-sm  lg:max-w-lg max-w-xs ">
+                        <h1
+                          className={
+                            "text-xs md:text-sm  font-semibold uppercase  text-gray-300 " +
+                            (selectedIndex === index
+                              ? " animate-fade-in-right-fast "
+                              : "invisible")
+                          }
+                        >
+                          Popular on Dev.to
+                        </h1>
+                        <h1
+                          className={
+                            "truncate text-sm md:text-xl font-medium text-white" +
+                            (selectedIndex === index
+                              ? " animate-fade-in-right "
+                              : "invisible")
+                          }
+                        >
+                          {slide.title}
+                        </h1>
+                        <p
+                          className={
+                            "truncate text-sm text-gray-50" +
+                            (selectedIndex === index
+                              ? " animate-fade-in-right-slow "
+                              : "invisible")
+                          }
+                        >
+                          {slide.description}
+                        </p>
+                      </span>
+                          {slide.image ? 
+                      <img
+                        className="embla__slide__img cursor-pointer brightness-50 transition-all"
+                        src={slide.image}
+                        alt="A cool cat."
+                      /> : <div className="embla__slide__img cursor-pointer bg-gray-500 transition-all"></div>}
+                    </div>
+                  </a>
+                </Link>
               </div>
             ))}
           </div>
