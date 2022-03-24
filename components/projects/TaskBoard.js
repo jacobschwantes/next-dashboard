@@ -38,8 +38,8 @@ export default function TaskBoard(props) {
   console.log(props);
   return (
     <dl className="mt-6  2xl:w-2/3 ">
-      {props.data.tasks.map((item) => (
-        <Disclosure as="div" key={item.group} className="pt-6 ">
+      {props.data.map((item) => (
+        <Disclosure defaultOpen as="div" key={item.group} className="pt-6 ">
           {({ open }) => (
             <>
               <dt className="flex w-full items-center justify-between space-x-3 text-left text-lg ">
