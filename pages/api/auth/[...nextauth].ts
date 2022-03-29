@@ -8,6 +8,9 @@ export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   // Configure one or more authentication providers
   secret: process.env.secret,
+  session: {
+    maxAge: 30 * 24 * 60 * 60,
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -16,11 +19,11 @@ export default NextAuth({
         params: {
           scope:
             "https://www.googleapis.com/auth/analytics.readonly profile email ",
-        
+            access_type: "offline",
         },
       },
       profile(profile) {
-        console.log(profile)
+        console.log(profile);
         return {
           id: profile.sub,
           name: profile.name,
@@ -49,18 +52,24 @@ export default NextAuth({
           .findOne({ email: user.email });
         if (authorized) {
           console.log(authorized);
-          const filter = { userId: new ObjectId(user.id)}
+          console.log(JSON.stringify(account, null, 2));
+          const filter = { userId: new ObjectId(user.id) };
           const updateDoc = {
             $set: {
+              expires_at: account.expires_at,
+              refresh_token: account.refresh_token,
               access_token: account.access_token,
             },
           };
-          await client.db("users").collection("accounts").updateOne(filter, updateDoc);
+          await client
+            .db("users")
+            .collection("accounts")
+            .updateOne(filter, updateDoc);
           return true;
         } else {
           console.log(authorized);
           // Return false to display a default error message
-          return '/unauthorized';
+          return "/unauthorized";
         }
       } finally {
         client.close();
