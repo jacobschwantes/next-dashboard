@@ -192,9 +192,9 @@ export default function App({ children }) {
               </span>
               <div>
                 <span className=" flex items-center justify-center space-x-3 sm:space-x-5 ">
-                  <button>
-                    <CogIcon className="h-7 w-7 text-gray-700  hover:scale-110 hover:text-gray-800 dark:text-gray-400" />
-                  </button>
+                <Link href="/settings">
+                    <CogIcon className="h-7 w-7 text-gray-700  hover:scale-110 hover:text-gray-800 dark:text-gray-400 cursor-pointer" />
+                  </Link>
                   <Notifications />
                   <ProfileMenu session={session} />
                 </span>
@@ -206,9 +206,9 @@ export default function App({ children }) {
                   <Breadcrumbs pages={getBreadcrumbs()} />
                 </span>
                 <span className=" flex items-center justify-center space-x-5 ">
-                  <button>
-                    <CogIcon className="h-7 w-7 text-gray-700 hover:scale-110 hover:text-gray-800 dark:text-gray-400" />
-                  </button>
+                <Link href="/settings">
+                    <CogIcon className="h-7 w-7 text-gray-700  hover:scale-110 hover:text-gray-800 dark:text-gray-400 cursor-pointer" />
+                  </Link>
                   <Notifications />
                   <ProfileMenu session={session} />
                 </span>

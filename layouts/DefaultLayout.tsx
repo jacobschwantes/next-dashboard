@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import Pages from "../components/Pages";
 import Head from "next/head";
 import { TerminalIcon } from "@heroicons/react/solid";
+import Link from "next/link";
 const scrollPages = ["/", "/cms"];
 
 export default ({ children }) => {
@@ -150,9 +151,9 @@ export default ({ children }) => {
               </span>
               <div>
                 <span className=" flex items-center justify-center space-x-3 sm:space-x-5 ">
-                  <button>
-                    <CogIcon className="h-7 w-7 text-gray-700  hover:scale-110 hover:text-gray-800 dark:text-gray-400" />
-                  </button>
+                  <Link href="/settings">
+                    <CogIcon className="h-7 w-7 text-gray-700  hover:scale-110 hover:text-gray-800 dark:text-gray-400 cursor-pointer" />
+                  </Link>
                   <Notifications />
                   <ProfileMenu session={session} />
                 </span>
@@ -164,9 +165,9 @@ export default ({ children }) => {
                   {getTitle()}
                 </span>
                 <span className=" flex items-center justify-center space-x-5 ">
-                  <button>
-                    <CogIcon className="h-7 w-7 text-gray-700 hover:scale-110 hover:text-gray-800 dark:text-gray-400" />
-                  </button>
+                <Link href="/settings">
+                    <CogIcon className="h-7 w-7 text-gray-700  hover:scale-110 hover:text-gray-800 dark:text-gray-400 cursor-pointer" />
+                  </Link>
                   <Notifications />
                   <ProfileMenu session={session} />
                 </span>
