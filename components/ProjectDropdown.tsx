@@ -12,7 +12,7 @@ function classNames(...classes) {
 export default function ProjectDropdown(props) {
   const [access, setAccess] = useState('');
   useEffect(() => {
-    props.members.forEach((item) => {
+    props.team.forEach((item) => {
       if (item.email === props.session.user.email) {
         setAccess(item.access)
       }

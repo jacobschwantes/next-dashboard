@@ -1,4 +1,5 @@
 import { CheckCircleIcon } from "@heroicons/react/solid";
+import Link from "next/link";
 
 /* This example requires Tailwind CSS v2.0+ */
 const people = [
@@ -33,10 +34,6 @@ const tasks = [
 
 export default function TaskTable(props) {
   return (
-   
-      
-     
-        
             <table className="min-w-full  divide-y divide-gray-200  ">
               <thead className="">
                 <tr className="">
@@ -70,7 +67,7 @@ export default function TaskTable(props) {
                 </tr>
               </thead>
               <tbody className=" ">
-                {tasks.sort((a, b) => (a.total_tasks - a.completed) - (b.total_tasks - b.completed)).map((task, ind) => (
+                {props.project.tasks.sort((a, b) => (a.total_tasks - a.completed) - (b.total_tasks - b.completed)).map((task, ind) => (
                   <tr key={ind}>
                     <td className={" px-2 py-4 whitespace-nowrap text-sm font-medium flex items-center " + (task.total_tasks === task.completed ? " text-gray-500" : " text-gray-900")}>
                       {task.completed === task.total_tasks ? <CheckCircleIcon className="h-5 pr-1"/> : <span className="mr-1.5 h-4 w-4 rounded-full bg-white border border-gray-900"></span>}{task.name}
@@ -78,7 +75,7 @@ export default function TaskTable(props) {
                     <td className=" px-2 py-4 whitespace-nowrap text-sm text-gray-500">
                       {" "}
                       <div className="flex -space-x-2 overflow-hidden">
-                        {props.project.members.map((item) => {
+                        {task.team.map((item) => {
                           return (
                             <img
                               className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
@@ -97,12 +94,13 @@ export default function TaskTable(props) {
                         {task.completed === 0 ? "Active" : task.completed === task.total_tasks ? "Completed" : "In-Progress"}</span>
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <Link href={`projects/${props.project._id}/tasks/${task._id}`}>
                       <a
                         href="#"
                         className="text-blue-600 hover:text-blue-900"
                       >
-                        Edit
-                      </a>
+                        View
+                      </a></Link>
                     </td>
                   </tr>
                 ))}

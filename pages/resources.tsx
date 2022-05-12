@@ -1,10 +1,14 @@
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useSession } from "next-auth/react";
+
+
 export default function App() {
-const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
   return (
-  <h1>resources</h1>
+    <div className="px-4 py-4 xl:px-10">
+      <h1>Resources</h1>
+    </div>
   );
 }
 
-App.Layout = DefaultLayout
+App.Layout = DefaultLayout;

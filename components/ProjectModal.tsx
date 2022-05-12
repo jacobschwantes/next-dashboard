@@ -15,6 +15,7 @@ import {
   AdjustmentsIcon,
 } from "@heroicons/react/solid";
 import Alert from "./Alert";
+import { Project } from "../types/projects";
 
 const colors = [
   { name: "Blue", bgColor: "bg-blue-500", selectedColor: "ring-blue-500" },
@@ -25,7 +26,7 @@ const colors = [
     bgColor: "bg-purple-500",
     selectedColor: "ring-purple-500",
   },
-  
+
   { name: "Green", bgColor: "bg-green-500", selectedColor: "ring-green-500" },
   {
     name: "Yellow",
@@ -60,7 +61,6 @@ const tabs = [
   { name: "Privacy", id: "privacy", icon: ShieldCheckIcon },
 ];
 
-
 const privacySettings = [
   {
     id: "public",
@@ -82,11 +82,11 @@ export default function ProjectModal(props) {
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
- 
-  async function postData(url = "", data = {}) {
+
+  async function postData(url = "", method, data = {}) {
     // Default options are marked with *
     const response = await fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      method, // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -95,7 +95,7 @@ export default function ProjectModal(props) {
     })
       .then(async (res) => {
         if (res.ok) {
-          return res
+          return res;
         } else {
           let text = await res.text();
           throw new Error(text);
@@ -108,17 +108,17 @@ export default function ProjectModal(props) {
     return response; // parses JSON response into native JavaScript objects
   }
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [alert, setAlert] = useState(null);
-  const [createError, setCreateError] = useState(null);
-  const [tagInput, setTagInput] = useState('');
+  const [error, setError] = useState("");
+  const [alert, setAlert] = useState("");
+  const [createError, setCreateError] = useState("");
+  const [tagInput, setTagInput] = useState("");
   const [active, setActive] = useState("general");
   const [privacy, setPrivacy] = useState(props.project.privacy);
   const [projectName, setProjectName] = useState(props.project.name);
   const [category, setCategory] = useState(props.project.category);
   const [description, setDescription] = useState(props.project.description);
   const [tags, setTags] = useState(props.project.tags);
-  const [teamMemberSearch, setTeamMemberSearch] = useState('');
+  const [teamMemberSearch, setTeamMemberSearch] = useState("");
   const [teamMembers, setTeamMembers] = useState([
     {
       name: props.session.user.name,
@@ -131,94 +131,79 @@ export default function ProjectModal(props) {
 
   useEffect(() => {
     setTimeout(() => {
-
-   
-    setError(null);
-    setAlert(null);
-    setTagInput('');
-    setActive("general");
-    setPrivacy(props.project.privacy);
-    setProjectName(props.project.name);
-    setCategory(props.project.category);
-    setDescription(props.project.description);
-    setTags(props.project.tags);
-    setTeamMemberSearch('');
-    setTeamMembers(props.project.members);
-    setTheme(props.project.theme); }, 300)
+      setError(null);
+      setAlert(null);
+      setTagInput("");
+      setActive("general");
+      setPrivacy(props.project.privacy);
+      setProjectName(props.project.name);
+      setCategory(props.project.category);
+      setDescription(props.project.description);
+      setTags(props.project.tags);
+      setTeamMemberSearch("");
+      setTeamMembers(
+        props.verb === "Create"
+          ? [
+              {
+                name: props.session.user.name,
+                email: props.session.user.email,
+                image: props.session.user.image,
+                access: "owner",
+              },
+            ]
+          : props.project.team
+      );
+      setTheme(props.project.theme);
+    }, 300);
   }, [props.open, props.project]);
-
 
   async function updateProject() {
     setLoading(true);
-    let project = {
+    let project: Project = {
       _id: props.project._id,
       name: projectName,
       category,
       description,
+      team: teamMembers,
       tags,
-      members: teamMembers,
+      tasks: props.project.tasks,
+      issues: props.project.issues,
       theme,
+      created_at: props.project.created_at,
       last_edit: Date.now(),
-      privacy
+      privacy,
     };
     console.log(project);
-    await postData("/api/projects/updateproject", project).then((res) => {
+    await postData("/api/projects", "PUT", project).then((res) => {
       if (res) {
+        console.log(res);
         setLoading(false);
         props.update();
         props.setOpen(false);
-        props.setActive(0); 
+        props.setActive(0);
       }
     });
   }
   async function createProject() {
     setLoading(true);
-    let project = {
+    let project: Project = {
       name: projectName,
       category,
       description,
+      team: teamMembers,
       tags,
-      members: teamMembers,
+      tasks: [],
+      issues: [],
       theme,
       created_at: Date.now(),
       last_edit: Date.now(),
-      last_task_id: 1,
-      groups: [
-        {
-          id: "new",
-          title: "New Tasks",
-          can_delete: false,
-          tasks: [
-            {
-              id: 1,
-              title: "First task",
-              body: "very cool and fun task",
-              bg_color: "blue",
-              pinned: false,
-            },
-            
-          ],
-        },
-        {
-          id: "started",
-          title: "In-Progress",
-          can_delete: true,
-          tasks: [],
-        },
-        {
-          id: "completed",
-          title: "Completed",
-          can_delete: false,
-          tasks: [],
-        },
-      ],
-      privacy
+      privacy,
     };
     console.log(project);
-    await postData("/api/projects/createproject", project).then((res) => {
+    await postData("/api/projects", "POST", project).then((res) => {
       if (res) {
         setLoading(false);
-        props.setOpen(false);  
+        props.setOpen(false);
         props.update();
         props.setActive(0);
       }
@@ -231,11 +216,11 @@ export default function ProjectModal(props) {
   }
   async function addMember(email) {
     if (teamMembers.find((member) => member.email === email)) {
-      setAlert(null);
-      setError("User is already a member.");
+      setAlert("");
+      setError("User is already a member");
       return;
     }
-    await fetch(`/api/getmember?email=${email}`)
+    await fetch(`/api/users/${email}`)
       .then(async (res) => {
         if (res.ok) {
           return res.json();
@@ -249,20 +234,19 @@ export default function ProjectModal(props) {
         member.access = "read/write";
         let newState = [...teamMembers, member];
         setTeamMembers(newState);
-        setError(null);
+        setError("");
         setAlert("Member successfully added.");
       })
       .catch((error) => {
         setError(error.message);
-        setAlert(false);
-      
+        setAlert("");
       });
   }
 
   return (
     <Transition.Root show={props.open} as={Fragment}>
-      <Dialog as="div" className="fixed z-10 inset-0 " onClose={props.setOpen}>
-        <div className=" items-end justify-center  pt-4 px-2  text-center block">
+      <Dialog as="div" className="fixed inset-0 z-10 " onClose={props.setOpen}>
+        <div className=" block items-end  justify-center px-2  pt-4 text-center">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -277,7 +261,7 @@ export default function ProjectModal(props) {
 
           {/* This element is to trick the browser into centering the modal contents. */}
           <span
-            className=" inline-block align-middle h-screen"
+            className=" inline-block h-screen align-middle"
             aria-hidden="true"
           >
             &#8203;
@@ -291,17 +275,17 @@ export default function ProjectModal(props) {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block bg-white rounded-lg px-4 pt-5 pb-4 text-left  shadow-xl transform transition-all align-middle max-w-xl w-full p-6">
+            <div className="inline-block w-full max-w-xl transform rounded-lg bg-white p-6  px-4 pt-5 pb-4 text-left align-middle shadow-xl transition-all">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   props.setOpen(false);
-                  props.verb === 'Create' ?  createProject() : updateProject();
+                  props.verb === "Create" ? createProject() : updateProject();
                   console.log("submitted");
                 }}
               >
                 <div>
-                  <h1 className="text-xl leading-6 font-medium text-gray-900">
+                  <h1 className="text-xl font-medium leading-6 text-gray-900">
                     {props.heading}
                   </h1>
                   <div>
@@ -318,8 +302,8 @@ export default function ProjectModal(props) {
                               className={classNames(
                                 active === tab.id
                                   ? "border-blue-500 text-blue-600"
-                                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                                "group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm cursor-pointer select-none"
+                                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
+                                "group inline-flex cursor-pointer select-none items-center border-b-2 py-4 px-1 text-sm font-medium"
                               )}
                               aria-current={tab.current ? "page" : undefined}
                             >
@@ -343,7 +327,7 @@ export default function ProjectModal(props) {
                     {active === "general" ? (
                       <div className="space-y-2">
                         <div>
-                          <h1 className="text-lg leading-6 font-medium text-gray-900">
+                          <h1 className="text-lg font-medium leading-6 text-gray-900">
                             Project Settings
                           </h1>
                           <p className="mt-1 text-sm text-gray-500">
@@ -368,7 +352,7 @@ export default function ProjectModal(props) {
                               id="project-name"
                               onChange={(e) => setProjectName(e.target.value)}
                               value={projectName}
-                              className="block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                             />
                           </div>
                         </div>
@@ -388,7 +372,7 @@ export default function ProjectModal(props) {
                               id="category"
                               onChange={(e) => setCategory(e.target.value)}
                               value={category}
-                              className="block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                             />
                           </div>
                         </div>
@@ -409,7 +393,7 @@ export default function ProjectModal(props) {
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
                               rows={3}
-                              className="block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border border-gray-300 rounded-md"
+                              className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                             />
                           </div>
                         </div>
@@ -429,7 +413,7 @@ export default function ProjectModal(props) {
                                 type="text"
                                 name="add-tag"
                                 id="add-tag"
-                                className="block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                                 placeholder="API"
                                 aria-describedby="add-tag-helper"
                               />
@@ -441,7 +425,7 @@ export default function ProjectModal(props) {
                                   setTagInput("");
                                 }}
                                 type="button"
-                                className="bg-white inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+                                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
                               >
                                 <PlusIcon
                                   className="-ml-2 mr-1 h-5 w-5 text-gray-400"
@@ -454,7 +438,10 @@ export default function ProjectModal(props) {
                           <div className="space-x-1">
                             {tags.map((tag, index) => {
                               return (
-                                <span key={index} className="inline-flex items-center py-0.5 pl-2 pr-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center rounded-full bg-blue-100 py-0.5 pl-2 pr-0.5 text-xs font-medium text-blue-700"
+                                >
                                   {tag}
                                   <button
                                     onClick={() => {
@@ -463,7 +450,7 @@ export default function ProjectModal(props) {
                                       );
                                     }}
                                     type="button"
-                                    className="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-400 hover:bg-blue-200 hover:text-blue-500 focus:outline-none focus:bg-blue-500 focus:text-white"
+                                    className="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-500 focus:bg-blue-500 focus:text-white focus:outline-none"
                                   >
                                     <span className="sr-only">Remove tag</span>
                                     <svg
@@ -487,11 +474,14 @@ export default function ProjectModal(props) {
                       </div>
                     ) : active === "theme" ? (
                       <div className="space-y-3">
-                        <RadioGroup value={colors.find(el => el.name === theme.name)} onChange={setTheme}>
+                        <RadioGroup
+                          value={colors.find((el) => el.name === theme.name)}
+                          onChange={setTheme}
+                        >
                           <RadioGroup.Label className="block text-sm font-medium text-gray-700">
                             Choose a theme color
                           </RadioGroup.Label>
-                          <div className=" flex items-center space-x-3  py-2 overflow-x-auto px-1.5 sm:overflow-hidden">
+                          <div className=" flex items-center space-x-3  overflow-x-auto py-2 px-1.5 sm:overflow-hidden">
                             {colors.map((color) => (
                               <RadioGroup.Option
                                 key={color.name}
@@ -503,7 +493,7 @@ export default function ProjectModal(props) {
                                       ? "ring ring-offset-1"
                                       : "",
                                     !active && checked ? "ring-2" : "",
-                                    "-m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none"
+                                    "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none"
                                   )
                                 }
                               >
@@ -514,7 +504,7 @@ export default function ProjectModal(props) {
                                   aria-hidden="true"
                                   className={classNames(
                                     color.bgColor,
-                                    "h-8 w-8 border border-black border-opacity-10 rounded-full"
+                                    "h-8 w-8 rounded-full border border-black border-opacity-10"
                                   )}
                                 />
                               </RadioGroup.Option>
@@ -523,23 +513,28 @@ export default function ProjectModal(props) {
                         </RadioGroup>
                       </div>
                     ) : active === "privacy" ? (
-                      <RadioGroup value={privacySettings.find(el => el.id === privacy.id)} onChange={setPrivacy}>
+                      <RadioGroup
+                        value={privacySettings.find(
+                          (el) => el.id === privacy.id
+                        )}
+                        onChange={setPrivacy}
+                      >
                         <RadioGroup.Label className="text-sm font-medium text-gray-900">
                           Privacy
                         </RadioGroup.Label>
 
-                        <div className="mt-1 bg-white rounded-md shadow-sm -space-y-px ">
+                        <div className="mt-1 -space-y-px rounded-md bg-white shadow-sm ">
                           {privacySettings.map((setting) => (
                             <RadioGroup.Option
                               key={setting.name}
                               id={setting.id}
                               value={setting}
-                              className={({checked }) =>
+                              className={({ checked }) =>
                                 classNames(
                                   checked
-                                    ? "bg-sky-50 border-sky-200 z-10"
+                                    ? "z-10 border-sky-200 bg-sky-50"
                                     : "border-gray-200",
-                                  "relative border p-4 flex cursor-pointer focus:outline-none"
+                                  "relative flex cursor-pointer border p-4 focus:outline-none"
                                 )
                               }
                             >
@@ -548,16 +543,16 @@ export default function ProjectModal(props) {
                                   <span
                                     className={classNames(
                                       checked
-                                        ? "bg-sky-600 border-transparent"
-                                        : "bg-white border-gray-300",
+                                        ? "border-transparent bg-sky-600"
+                                        : "border-gray-300 bg-white",
                                       active
-                                        ? "ring-2 ring-offset-2 ring-sky-500"
+                                        ? "ring-2 ring-sky-500 ring-offset-2"
                                         : "",
-                                      "h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center"
+                                      "mt-0.5 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full border"
                                     )}
                                     aria-hidden="true"
                                   >
-                                    <span className="rounded-full bg-white w-1.5 h-1.5" />
+                                    <span className="h-1.5 w-1.5 rounded-full bg-white" />
                                   </span>
                                   <div className="ml-3 flex flex-col">
                                     <RadioGroup.Label
@@ -611,7 +606,7 @@ export default function ProjectModal(props) {
                                 type="email"
                                 name="add-team-members"
                                 id="add-team-members"
-                                className="block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                                 placeholder="Email address"
                                 aria-describedby="add-team-members-helper"
                               />
@@ -620,7 +615,7 @@ export default function ProjectModal(props) {
                               <button
                                 onClick={() => addMember(teamMemberSearch)}
                                 type="button"
-                                className="bg-white inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+                                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
                               >
                                 <PlusIcon
                                   className="-ml-2 mr-1 h-5 w-5 text-gray-400"
@@ -652,12 +647,12 @@ export default function ProjectModal(props) {
                         >
                           <ul
                             role="list"
-                            className="divide-y h-40  divide-gray-200 overflow-y-scroll"
+                            className="h-40 divide-y  divide-gray-200 overflow-y-scroll"
                           >
                             {teamMembers.map((member) => (
                               <li
                                 key={member.email}
-                                className="py-4 flex justify-between"
+                                className="flex justify-between py-4"
                               >
                                 <div className="flex">
                                   <img
@@ -680,7 +675,7 @@ export default function ProjectModal(props) {
                                     <button
                                       onClick={() => removeMember(member.email)}
                                       type="button"
-                                      className="mr-2 inline-flex  rounded-md p-1.5  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-gray-500 hover:bg-gray-100 focus:ring-offset-gray-50 bg-gray-200 "
+                                      className="mr-2 inline-flex  rounded-md bg-gray-200  p-1.5 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 focus:ring-offset-gray-50 "
                                     >
                                       <span className="sr-only">Dismiss</span>
                                       <XIcon
@@ -705,14 +700,14 @@ export default function ProjectModal(props) {
                     setOpen={setCreateError}
                   />
                 ) : null}
-                <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
                     type="submit"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:col-start-2 sm:text-sm"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
                   >
                     {loading ? (
                       <svg
-                        className="animate-spin -ml-1 mr-2 h-5 w-5 text-gray-200"
+                        className="-ml-1 mr-2 h-5 w-5 animate-spin text-gray-200"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -736,7 +731,7 @@ export default function ProjectModal(props) {
                   </button>
                   <button
                     type="button"
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                     onClick={() => props.setOpen(false)}
                   >
                     Cancel

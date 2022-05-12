@@ -39,6 +39,7 @@ export default NextAuth({
     session: async ({ session, user }) => {
       session.userId = user.id;
       session.projects = user.projects;
+      console.log(session)
       return Promise.resolve(session);
     },
     async signIn({ user, account, profile, email, credentials }) {

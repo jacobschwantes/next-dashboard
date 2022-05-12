@@ -23,7 +23,7 @@ export default function Breadcrumbs(props) {
               <Link href={page.href}>
               <a
                 
-                className="ml-4 text-lg font-medium text-gray-700 dark:text-gray-300 dark:hover:text-gray-400 hover:text-gray-800 "
+                className="ml-4  font-medium text-gray-700 dark:text-gray-300 dark:hover:text-gray-400 hover:text-gray-800 "
               >
                 {page.name}
               </a></Link>

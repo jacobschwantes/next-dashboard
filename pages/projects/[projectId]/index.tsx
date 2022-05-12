@@ -121,58 +121,8 @@ export default function App() {
   const router = useRouter();
 
   const { projectId } = router.query;
-  const { project, isLoading, error } = useProject(`?id=${projectId}`);
-  let [categories, setCategories] = useState({});
-
-  useEffect(() => {
-    project ? 
-    setCategories({
-      Tasks: {
-        data: {
-          tasks: sampleTasks,
-        },
-        component: TaskBoard,
-      },
-      Insights: {
-        data: {
-          tasks: sampleTasks,
-        },
-        component: TaskBoard,
-      },
-      Team: {
-        data: {
-          team: project.members,
-        },
-        component: TeamCards,
-      },
-      Discussion: {
-        data: {
-          tasks: sampleTasks,
-        },
-        component: TaskBoard,
-      },
-      Issues: {
-        data: {
-          issues: project.issues,
-        },
-        component: Issues,
-      },
-
-      Settings: {
-        data: {
-          tasks: sampleTasks,
-        },
-        component: TaskBoard,
-      },
-      Log: {
-        data: {
-          tasks: sampleTasks,
-        },
-        component: TaskBoard,
-      },
-    }) : null;
-  }, [project]);
-
+  const { project, isLoading, error } = useProject(projectId);
+ 
   return (
     <div className="scrollbar black scrollbarY h-partial space-y-5 overflow-auto px-4 py-4  xl:px-10 ">
  

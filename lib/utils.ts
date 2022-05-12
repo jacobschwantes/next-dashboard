@@ -1,6 +1,13 @@
 import useSWR from "swr";
-const fetcher = async (url, params = "") => {
-  const res = await fetch(`${url}${params}`);
+const fetcher = async (url, method, body) => {
+  const res = await fetch(url, {
+    method: method, // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body
+  })
 
   // If the status code is not in the range 200-299,
   // we still try to parse and throw it.
@@ -12,7 +19,6 @@ const fetcher = async (url, params = "") => {
 
     throw error;
   }
-
   return res.json();
 };
 export function useAnalytics() {
@@ -27,17 +33,33 @@ export function useAnalytics() {
 }
 
 export function useProjects() {
-  const { data, error } = useSWR("/api/projects/getprojects", fetcher, );
+  const { data, error } = useSWR(["/api/projects", "GET"], fetcher, );
   return {
     projects: data,
     isLoading: !error && !data,
     isError: error,
   };
 }
-export function useProject(params) {
-  const { data, error } = useSWR(["/api/projects/getprojectbyid", params], fetcher);
+export function useProject(id) {
+  const { data, error } = useSWR([`/api/projects/${id}`, 'GET'], fetcher);
   return {
     project: data,
+    isLoading: !error && !data,
+    error,
+  };
+}
+export function useIssues(projectId) {
+  const {data, error } = useSWR([`/api/projects/${projectId}/issues`, 'GET'], fetcher);
+  return {
+    issues: data,
+    isLoading: !error && !data,
+    error,
+  };
+}
+export function useTasks(projectId) {
+  const {data, error } = useSWR([`/api/projects/${projectId}/tasks`, 'GET'], fetcher);
+  return {
+    tasks: data,
     isLoading: !error && !data,
     error,
   };
@@ -49,5 +71,32 @@ export function useNews() {
     news: data,
     isLoading: !error && !data,
     isError: error,
+  }
+}
+
+
+export function formatDate(time: EpochTimeStamp) {
+  let now = Date.now();
+  let difference = now / 1000 - time;
+  if (difference < 3600) {
+    return `${Math.round(difference / 60)} minute${
+      Math.round(difference / 60) !== 1 ? "s" : ""
+    } ago`;
+  }
+  if (difference < 86400) {
+    return `about ${Math.round(difference / 3600)} hour${
+      Math.round(difference / 3600) > 1 ? "s" : ""
+    } ago`;
+  }
+  if (difference / 86400 < 30) {
+    return `${(difference / 86400).toFixed(0)} day${
+      (difference / 86400).toFixed(0) > 1 ? "s" : ""
+    } ago`;
+  } else {
+    return new Date(1642030293 * 1000).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   }
 }

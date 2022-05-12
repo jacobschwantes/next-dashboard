@@ -5,15 +5,12 @@ import { getSession } from "next-auth/react";
 import { ObjectId } from "mongodb";
 import { MongoClient } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Issue } from "../../../../types/projects";
-
-
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const issueId = new ObjectId(req.query.id);
+  const issueId = new ObjectId(req.query.issueId);
   const projectId = new ObjectId(req.body.projectId);
   console.log(req.query);
   const method = req.method;
@@ -87,26 +84,6 @@ export default async function handler(
 const getIssue = (client: MongoClient, id: ObjectId) => {
   return client.db("users").collection("projectIssues").findOne({ _id: id });
 };
-/**
- * Inserts issue document into DB
- *
- * @param client - Connected mongo client
- * @param issue - Issue object to be inserted
- * @returns ObjectId of inserted document
- *
- */
-const writeIssue = (client: MongoClient, issue: Issue) => {
-  return client.db("users").collection("projectIssues").insertOne(issue);
-};
-/**
- * Updates issue document in DB
- *
- * @param client - Connected mongo client
- * @param id - ObjectId of issue
- * @param updateDoc - Object containing properties to be updated
- * @returns confirmation of update
- *
- */
 const updateIssue = (client: MongoClient, id: ObjectId, updateDoc: object) => {
   return client
     .db("users")
@@ -145,32 +122,6 @@ const pullIssueFromProject = (
       { _id: projectID },
       {
         $pull: {
-          issues: id,
-        },
-      }
-    );
-};
-/**
- * Adds issue ObjectId to project issue array
- *
- * @param client - Connected mongo client
- * @param id - ObjectId of issue
- * @param projectId - ObjectId of project the issue belongs to
- * @returns promise
- *
- */
-const pushIssueToProject = (
-  client: MongoClient,
-  id: ObjectId,
-  projectID: ObjectId
-) => {
-  return client
-    .db("users")
-    .collection("projects")
-    .updateOne(
-      { _id: projectID },
-      {
-        $push: {
           issues: id,
         },
       }

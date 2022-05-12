@@ -1,9 +1,10 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, Timestamp } from "mongodb";
+import { Session, User } from "next-auth";
 import { DocumentNode } from "./notes";
 export type Member = {
   name: string;
   email: string;
-  image: URL;
+  image: string;
 };
 export type Theme = {
   id: string;
@@ -19,18 +20,20 @@ export type Privacy = {
 export type Project = {
   _id?: ObjectId;
   name: string;
-  category: "string";
+  category: string;
   description: string;
-  members: Array<Member>;
-  tags?: Array<string>;
+  team: Array<Member>;
+  tags: Array<string>;
+  tasks: Array<Task>;
+  issues: Array<Issue>;
   theme: Theme;
-  created_at: Date;
-  last_edited: Date;
+  created_at: EpochTimeStamp;
+  last_edit: EpochTimeStamp;
   privacy: Privacy;
 };
 export type Issue = {
   _id?: ObjectId;
-  author: Member,
+  author: Member;
   title: string;
   category?: string;
   tags?: Array<string>;
@@ -39,24 +42,57 @@ export type Issue = {
   created: EpochTimeStamp;
   closed?: EpochTimeStamp;
 };
+export type Task = {
+  _id?: ObjectId;
+  name: string;
+  team: Array<Member>;
+  description: string;
+  category: string;
+  tags: Array<string>;
+  priority: number;
+  subtasks?: Array<Task>;
+  created_at: EpochTimeStamp;
+  last_edit: EpochTimeStamp;
+  events: Array<Event>;
+  completed: boolean;
+  activity: Array<Event>;
+};
 
 export type Comment = {
   _id?: ObjectId;
   author: Member;
-  created: EpochTimeStamp;
-  body: Array<DocumentNode>;
+  created_at: EpochTimeStamp;
+  body: string;
   ref?: ObjectId;
   reactions?: Array<Reaction>;
 };
 export type Reaction = {
-  user: Member;
-  type:
+  users: Array<Member>;
+  name:
     | "heart"
     | "thumbsup"
     | "thumbsdown"
-    | "celebration"
+    | "fire"
     | "smile"
     | "frown"
-    | "rocket"
-    | "eyes";
+    | "sparkles";
+};
+
+export type Event = {
+  id: number;
+  type:
+    | "comment"
+    | "team"
+    | "tags"
+    | "progress"
+    | "priority"
+    | "description"
+    | "task"
+    | "name"
+    | "category";
+  action: "deleted" | "created" | "edited" | "complete" | "added" | "removed";
+  reactions: Array<Reaction>;
+  user?: Member;
+  body?: any;
+  timestamp: EpochTimeStamp;
 };

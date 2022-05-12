@@ -21,8 +21,8 @@ export default async function handler(req, res) {
         // check if project exists in db
         if (findResult) {
           console.log('found project in db =>', findResult)
-          const newMemberList = project.members;
-          const oldMemberList = findResult.members;
+          const newMemberList = project.team;
+          const oldMemberList = findResult.team;
           const addedMembers = [];
           const removedMembers = [];
           // check if member list is different, finding who has been added or removed
@@ -90,7 +90,7 @@ export default async function handler(req, res) {
               description: project.description,
               tags: project.tags,
               theme: project.theme,
-              members: project.members,
+              team: project.team,
               last_edit: project.last_edit,
               privacy: project.privacy,
             },

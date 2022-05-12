@@ -5,7 +5,7 @@ import ProjectLayout from "../../../../layouts/ProjectLayout";
 export default function App (props) {
     const router = useRouter();
     const { projectId } = router.query;
-    const { project, isLoading, error } = useProject(`?id=${projectId}`);
+    const { project, isLoading, error } = useProject(projectId);
     return isLoading ? "loading" : (
         <TeamCards data={project} />
     )

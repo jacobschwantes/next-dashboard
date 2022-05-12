@@ -4,15 +4,15 @@ import {
   PlusIcon,
 } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
-import DefaultLayout from "../layouts/DefaultLayout";
-import Input from "../components/Input";
+import DefaultLayout from "../../layouts/DefaultLayout";
+import Input from "../../components/Input";
 import { useState } from "react";
-import ProjectModal from "../components/ProjectModal";
-import ProjectCard from "../components/ProjectCard2";
-import { useProjects } from "../lib/utils";
+import ProjectModal from "../../components/ProjectModal";
+import ProjectCard from "../../components/ProjectCard2";
+import { useProjects } from "../../lib/utils";
 import useSWR, { useSWRConfig } from "swr";
-import ProjectLoadingState from "../components/ProjectLoadingState";
-import TaskTable from "../components/TaskTable";
+import ProjectLoadingState from "../../components/ProjectLoadingState";
+import TaskTable from "../../components/TaskTable";
 import { Fragment } from "react";
 import { Dialog, Transition, Disclosure } from "@headlessui/react";
 import { ArrowLeftIcon, XIcon } from "@heroicons/react/outline";

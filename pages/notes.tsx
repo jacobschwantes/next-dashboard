@@ -207,6 +207,7 @@ export default function App() {
   const [readOnly, setReadOnly] = useState(true);
   const [titleEditor, setTitleEditor] = useState("");
   const [editingTitle, setEditingTitle] = useState(false);
+  const [body, setBody] = useState('');
 
   useEffect(() => {
     setReadOnly(true);
@@ -306,7 +307,7 @@ export default function App() {
               />
             </span>
           </div>
-          <RichText expand={true} readOnly={readOnly} document={activeDocument.contents} />
+          <RichText setBody={setBody} expand={true} readOnly={readOnly} document={activeDocument.contents} />
         </div>
 
         <div className="h-partial flex-1 grid grid-rows-2 gap-4   ">

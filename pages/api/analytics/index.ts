@@ -182,6 +182,8 @@ async function refreshAccessToken(token) {
     });
 
     const refreshedTokens = await response.json();
+    console.log(response)
+    console.log(refreshedTokens)
     console.log(
       "\u001b[1;34m got new tokens! -- " + refreshedTokens + "\u001b[0m"
     );
