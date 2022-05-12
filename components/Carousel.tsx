@@ -99,7 +99,7 @@ const EmblaCarousel = (props) => {
 
   return (
     <>
-      <div className="embla ">
+      <div className="embla rounded-lg ">
         <div className="embla__dots">
           {scrollSnaps.map((_, index) => (
             <DotButton
@@ -109,7 +109,7 @@ const EmblaCarousel = (props) => {
             />
           ))}
         </div>
-        <div className="embla__viewport "  ref={viewportRef}>
+        <div className="embla__viewport  "  ref={viewportRef}>
           <div className="embla__container">
             {props.slides.map((slide, index) => (
               <div className="embla__slide" key={index}>
@@ -150,10 +150,10 @@ const EmblaCarousel = (props) => {
                       </span>
                           {slide.image ? 
                       <img
-                        className="embla__slide__img cursor-pointer brightness-50 transition-all"
+                        className="embla__slide__img rounded-lg cursor-pointer brightness-50 transition-all"
                         src={slide.image}
                         alt="A cool cat."
-                      /> : <div className="embla__slide__img cursor-pointer bg-gray-500 transition-all"></div>}
+                      /> : <div className="embla__slide__img rounded-lg cursor-pointer bg-gray-500 transition-all"></div>}
                     </div>
                   </a>
                 </Link>
