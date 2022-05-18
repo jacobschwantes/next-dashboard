@@ -118,7 +118,7 @@ const RichText = (props) => {
         value={value}
         onChange={(newValue) => {
           setValue(newValue);
-          console.log(value);
+  
         }}
       >
         {props.readOnly ? null : (
@@ -162,10 +162,10 @@ const RichText = (props) => {
 };
 
 const toggleBlock = (editor, format) => {
-  console.log(1, editor, format);
+
   const isActive = isBlockActive(editor, format);
   const isList = LIST_TYPES.includes(format);
-  console.log(2, isActive, isList);
+ 
 
   Transforms.unwrapNodes(editor, {
     match: (n) =>

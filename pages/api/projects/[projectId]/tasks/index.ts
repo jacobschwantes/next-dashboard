@@ -117,7 +117,7 @@ const pushTaskToProject = (
   id: ObjectId,
   projectID: ObjectId
 ) => {
-  console.log(projectID);
+
   return client
     .db("users")
     .collection("projects")
@@ -139,7 +139,7 @@ const pushTaskToProject = (
  *
  */
 const getTaskList = (client: MongoClient, projectId: ObjectId) => {
-  console.log(projectId);
+
   return client
     .db("users")
     .collection("projects")

@@ -34,7 +34,6 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-  console.log(result);
   return result;
 };
 const createGroup = (name) => {
@@ -59,13 +58,11 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const [removed] = sourceClone.splice(droppableSource.index, 1);
-  console.log("removed :", removed);
   destClone.splice(droppableDestination.index, 0, removed);
 
   const result = {};
   result[droppableSource.droppableId] = sourceClone;
   result[droppableDestination.droppableId] = destClone;
-  console.log("result: ", result);
   return result;
 };
 
@@ -82,7 +79,6 @@ export default function ProjectBoard(props) {
 
   function onDragEnd(result) {
     const { source, destination, type } = result;
-    console.log(result);
     // dropped outside the list
     if (!destination) {
       return;
@@ -110,10 +106,10 @@ export default function ProjectBoard(props) {
           destination
         );
         const newState = [...state];
-        console.log("new state before: ", newState);
+  
         newState[sInd].tasks = result[sInd];
         newState[dInd].tasks = result[dInd];
-        console.log("new state after: ", newState);
+      
 
         setState(newState);
       }
@@ -125,7 +121,7 @@ export default function ProjectBoard(props) {
       <DragDropContext
         onDragEnd={(e) => {
           onDragEnd(e);
-          console.log(e);
+  
           postData("/api/projects/updateprojectboard", {
             _id: props.project._id,
             groups: state,

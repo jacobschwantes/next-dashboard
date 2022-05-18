@@ -73,11 +73,11 @@ export default function TaskBoard(props) {
 
   const updateTask = (data, action) => {
     const index = task.subtasks.findIndex((item) => item._id === data._id);
-    console.log(index);
+
     const newState = [...task.subtasks];
-    console.log(newState);
+
     newState[index] = data;
-    console.log({ ...task, subtasks: newState });
+
     setTask({ ...task, subtasks: newState });
     putTask(data._id, data, action);
   };
@@ -176,7 +176,7 @@ export default function TaskBoard(props) {
                             const newState = { ...subTaskItem };
                             newState.completed = true;
                             updateTask(newState, "taskComplete");
-                            console.log(task);
+                       
                           }}
                           id="candidates"
                           checked={subTaskItem.completed}

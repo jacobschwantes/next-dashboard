@@ -81,7 +81,7 @@ export default function IssueModal(props) {
       last_edit: Date.now(),
       privacy,
     };
-    console.log(project);
+
     await postData("/api/projects/updateproject", project).then((res) => {
       if (res) {
         setLoading(false);
@@ -151,7 +151,7 @@ export default function IssueModal(props) {
                   e.preventDefault();
                   props.setOpen(false);
                   props.verb === "Create" ? createIssue() : updateIssue();
-                  console.log("submitted");
+ 
                 }}
               >
                 <div>

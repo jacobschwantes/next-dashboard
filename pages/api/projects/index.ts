@@ -44,7 +44,7 @@ export default async function handler(
                 ? res.status(200).send("created project")
                 : res.status(400).send("failed to create project");
             } else {
-              console.log("error inserting doc");
+ 
               res.status(400).send("project could not be created");
             }
           } else {
@@ -145,7 +145,7 @@ const getProjects = async (
   const projects: Array<Project> = [];
   await projectCursor.forEach((item) => {
     projects.push(item);
-    console.log(item);
+
   });
   return projects;
 };

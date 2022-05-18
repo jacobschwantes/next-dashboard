@@ -42,7 +42,6 @@ const unread = [
 const read = [];
 export default function Notifications(props) {
   const { notifications, isLoading, isError } = useNotifications();
-  !isLoading ? console.log(notifications) : null
   return (
     <Menu as="div" className=" inline-block  text-left xs:relative">
       <div className="flex items-center">

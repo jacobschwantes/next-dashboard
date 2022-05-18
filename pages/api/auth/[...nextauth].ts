@@ -23,7 +23,7 @@ export default NextAuth({
         },
       },
       profile(profile) {
-        console.log(profile);
+
         return {
           id: profile.sub,
           name: profile.name,
@@ -39,7 +39,7 @@ export default NextAuth({
     session: async ({ session, user }) => {
       session.userId = user.id;
       session.projects = user.projects;
-      console.log(session)
+   
       return Promise.resolve(session);
     },
     async signIn({ user, account, profile, email, credentials }) {
@@ -52,8 +52,7 @@ export default NextAuth({
           .collection("authorized_users")
           .findOne({ email: user.email });
         if (authorized) {
-          console.log(authorized);
-          console.log(JSON.stringify(account, null, 2));
+       
           const filter = { userId: new ObjectId(user.id) };
           const updateDoc = {
             $set: {
@@ -68,7 +67,7 @@ export default NextAuth({
             .updateOne(filter, updateDoc);
           return true;
         } else {
-          console.log(authorized);
+     
           // Return false to display a default error message
           return "/unauthorized";
         }

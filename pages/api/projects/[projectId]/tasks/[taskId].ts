@@ -11,7 +11,6 @@ export default async function handler(
 ) {
   const session = await getSession({ req });
   const newTask: Task = req.body.task;
-  console.log("newtask->", newTask);
   const projectId = new ObjectId(req.query.projectId);
   const taskId = new ObjectId(req.query.taskId);
   const method = req.method;
@@ -34,7 +33,7 @@ export default async function handler(
           break;
         case "POST":
           if (newTask) {
-            console.log("writing task...");
+    
             const writeResult = await writeSubTask(client, newTask);
             if (writeResult) {
               const pushResult = await pushSubTaskToTask(
@@ -52,7 +51,7 @@ export default async function handler(
 
           break;
         case "PUT":
-          console.log("putting...");
+   
           const updateResult = await updateTask(client, taskId, newTask);
           if (updateResult) {
             const users: string[] = [];
@@ -69,13 +68,13 @@ export default async function handler(
 
           break;
         case "DELETE":
-          console.log("deleting task...");
+     
           const deleteResult = await deleteTask(
             client,
             new ObjectId(req.body.taskId)
           );
           if (deleteResult) {
-            console.log("pulling task");
+     
             const pullResult = await pullSubTaskFromTask(
               client,
               taskId,

@@ -12,7 +12,6 @@ export default async function handler(
 ) {
   const issueId = new ObjectId(req.query.issueId);
   const projectId = new ObjectId(req.body.projectId);
-  console.log(req.query);
   const method = req.method;
   const session = await getSession({ req });
   if (session && method && projectId && issueId) {

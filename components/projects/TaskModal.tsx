@@ -137,7 +137,7 @@ export default function TaskModal(props) {
       activity: [],
       completed: false,
     };
-    console.log(props.taskId);
+
     await postData(`/api/projects/${props.projectId}/tasks/${props.taskId}`, {
       task,
     }).then((res) => {
@@ -148,7 +148,7 @@ export default function TaskModal(props) {
   }
   function removeMember(email: string) {
     let newState = [...team].filter((item) => item.email !== email);
-    console.log(newState);
+
     setTeam(newState);
   }
   async function addMember(email: string) {
@@ -218,7 +218,7 @@ export default function TaskModal(props) {
                   e.preventDefault();
                   props.setOpen(false);
                   props.isSubtask ? createSubTask() : createTask();
-                  console.log("submitted");
+            
                 }}
               >
                 <div>

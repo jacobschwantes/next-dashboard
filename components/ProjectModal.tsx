@@ -173,10 +173,10 @@ export default function ProjectModal(props) {
       last_edit: Date.now(),
       privacy,
     };
-    console.log(project);
+
     await postData("/api/projects", "PUT", project).then((res) => {
       if (res) {
-        console.log(res);
+      
         setLoading(false);
         props.update();
         props.setOpen(false);
@@ -199,7 +199,7 @@ export default function ProjectModal(props) {
       last_edit: Date.now(),
       privacy,
     };
-    console.log(project);
+
     await postData("/api/projects", "POST", project).then((res) => {
       if (res) {
         setLoading(false);
@@ -211,7 +211,7 @@ export default function ProjectModal(props) {
   }
   function removeMember(email) {
     let newState = [...teamMembers].filter((item) => item.email !== email);
-    console.log(newState);
+
     setTeamMembers(newState);
   }
   async function addMember(email) {
@@ -281,7 +281,7 @@ export default function ProjectModal(props) {
                   e.preventDefault();
                   props.setOpen(false);
                   props.verb === "Create" ? createProject() : updateProject();
-                  console.log("submitted");
+        
                 }}
               >
                 <div>

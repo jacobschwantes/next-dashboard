@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     const email = emailIsValid(req.query.email);
     if (email) {
       try {
-        console.log(req.query.email);
+      
         await client.connect();
         const dbName = "users";
         const db = client.db(dbName);
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
           email: req.query.email,
         });
         if (findResult) {
-          console.log("found user: ", findResult);
+        
           res
             .status(200)
             .json({
@@ -31,21 +31,21 @@ export default async function handler(req, res) {
               image: findResult.image,
             });
         } else {
-          console.log("user does not exist");
+    
           res.status(404).send("User does not exist.");
         }
       } catch (e) {
         res.status(500).send(e.message);
       } finally {
-        console.log("client closed");
+  
         client.close();
       }
     } else {
-      console.log("invalid email", email);
+
       res.status(400).send("Invalid email address.");
     }
   } else {
-    console.log("unauthorized");
+
     res.status(401).send("unauthorized");
   }
 }

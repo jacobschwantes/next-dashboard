@@ -99,7 +99,7 @@ const pushIssueToProject = (
   id: ObjectId,
   projectID: ObjectId
 ) => {
-    console.log(projectID);
+
   return client
     .db("users")
     .collection("projects")

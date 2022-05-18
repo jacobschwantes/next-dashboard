@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       await client.connect();
       const notifications = await getNotifications(client, session.user?.email);
       notifications ? notifications.unreadNotifications.sort((a, b) => b.timestamp - a.timestamp) : null
-      console.log('sorted', notifications)
+
       notifications
         ? res.status(200).send(notifications)
         : res.status(400).send("bad request");

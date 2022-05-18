@@ -94,7 +94,7 @@ export default function App({ children }) {
 
   if (status === "authenticated") {
     {
-      console.log(router.route);
+ 
     }
     return (
       <>

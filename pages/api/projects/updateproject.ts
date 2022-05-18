@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const project = req.body;
     if (project) {
       try {
-        console.log(project);
+
         await client.connect();
         const dbName = "users";
         const db = client.db(dbName);
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         });
         // check if project exists in db
         if (findResult) {
-          console.log('found project in db =>', findResult)
+      
           const newMemberList = project.team;
           const oldMemberList = findResult.team;
           const addedMembers = [];
@@ -39,8 +39,7 @@ export default async function handler(req, res) {
                 removedMembers.push(member.email);
               }
             });
-            console.log("added members: ", addedMembers);
-            console.log("removed members: ", removedMembers);
+
             if (addedMembers.length > 0) {
               const filter = { email: { $in: addedMembers } };
               const updateDoc = {
@@ -52,13 +51,9 @@ export default async function handler(req, res) {
                 .collection("users")
                 .updateMany(filter, updateDoc);
               if (addMembersResult) {
-                console.log(
-                  `Updated ${addMembersResult.modifiedCount} documents`
-                );
+              
               } else {
-                console.log(
-                  "failed to add project to new members project array"
-                );
+               
               }
             }
             if (removedMembers.length > 0) {
@@ -72,13 +67,10 @@ export default async function handler(req, res) {
                 .collection("users")
                 .updateMany(filter, updateDoc);
               if (removeMembersResult) {
-                console.log(
-                  `Updated ${removeMembersResult.modifiedCount} documents`
-                );
+              
+              
               } else {
-                console.log(
-                  "failed to remove project from members project array"
-                );
+               
               }
             }
           }
@@ -100,34 +92,32 @@ export default async function handler(req, res) {
             updateDoc
           );
           if (updateResult) {
-            console.log(
-              `${updateResult.matchedCount} document(s) matched the filter, updated ${updateResult.modifiedCount} document(s)`
-            );
+           
             res
               .status(200)
               .send(
                 `${updateResult.matchedCount} document(s) matched the filter, updated ${updateResult.modifiedCount} document(s)`
               );
           } else {
-            console.log("failed to update document");
+           
             res.status(400).send("failed to update document");
           }
         } else {
-          console.log("project does not exist");
+         
           res.status(400).send("project does not exist");
         }
       } catch (e) {
         res.status(500).send(e.message);
       } finally {
-        console.log("client closed");
+        
         client.close();
       }
     } else {
-      console.log("invalid project", project);
+     
       res.status(400).send("invalid project");
     }
   } else {
-    console.log("unauthorized");
+    
     res.status(401).send("unauthorized");
   }
 }

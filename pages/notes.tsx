@@ -215,13 +215,13 @@ export default function App() {
   }, [activeDocument._id, activeFolder]);
   const deleteFolder = (folderIndex: number) => {
     setActiveFolder(0);
-    console.log(folderIndex);
+
     const newState = [...folders];
     newState.splice(folderIndex, 1);
     setFolders(newState);
   };
   const addFolder = () => {
-    console.log(folders);
+
     const emptyFolder: Folder = {
       name: `Folder${folders.length + 1}`,
       favorite: false,

@@ -74,7 +74,7 @@ const getProject = async (client: MongoClient, id: ObjectId) => {
     .collection("projects")
     .findOne({ _id: id });
   if (findResult) {
-    console.log("found one->", findResult);
+  
     const issuesCursor = client
       .db("users")
       .collection("projectIssues")
@@ -164,7 +164,7 @@ const pullIssues = (client: MongoClient, projectId: ObjectId) => {
   const collection = db.collection("users");
   const memberList = [];
   await project.members.forEach((member) => memberList.push(member.email));
-  console.log(memberList)
+
   const filter = { email: { $in: memberList } };
   const updateDoc = {
     $pull: {
@@ -174,18 +174,18 @@ const pullIssues = (client: MongoClient, projectId: ObjectId) => {
   const removeUserProjects = await db
     .collection("users")
     .updateMany(filter, updateDoc);
-  console.log(`Updated ${removeUserProjects.modifiedCount} documents`);
+
   if (removeUserProjects) {
       const deleteProject = await db.collection("projects").deleteOne({_id: new ObjectId(project._id)})
       if (deleteProject.deletedCount === 1) {
-          console.log("Successfully deleted one document.");
+  
           res.status(200).send('deleted document')
         } else {
             res.status(400).send('err deleting project')
-          console.log("No documents matched the query. Deleted 0 documents.");
+        
         }
   } else {
-      console.log('err removing project from users')
+
       res.status(400).send('err removing project from users')
   }
 */
