@@ -241,7 +241,7 @@ export default function App({ children }) {
                     : null
                 }
               >
-                <div className=" space-y-4  px-2 py-4  xl:px-10 2xl:w-2/3">
+                <div className=" space-y-4  px-2 py-4  xl:px-10 2xl:w-2/3 h-partial overflow-auto">
                   {isLoading ? (
                     "loading "
                   ) : error ? (

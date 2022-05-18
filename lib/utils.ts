@@ -100,3 +100,11 @@ export function formatDate(time: EpochTimeStamp) {
     });
   }
 }
+export function useNotifications () {
+  const {data, error} = useSWR("/api/users/notifications", fetcher, { refreshInterval: 60000 }); 
+  return {
+    notifications: data,
+    isLoading: !error && !data,
+    isError: error,
+  }
+}

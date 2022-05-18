@@ -20,7 +20,7 @@ export default async function handler(
       switch (method) {
         case "GET":
           const project = await getProject(client, projectId);
-          const isAuthorized = await verifyPrivacy(session, project);
+          const isAuthorized = verifyPrivacy(session, project);
           if (isAuthorized) {
             res.status(200).json(project);
           } else {
@@ -29,6 +29,7 @@ export default async function handler(
               : res.status(404).send("project not found");
           }
           break;
+        case "DELETE":
       }
     } finally {
       client.close();
@@ -102,3 +103,89 @@ const getProject = async (client: MongoClient, id: ObjectId) => {
   }
   return;
 };
+/**
+ * Deletes project document from DB
+ *
+ * @param client - Connected mongo client
+ * @param projectId - ObjectId of project
+ * @returns promise
+ *
+ */
+const deleteProject = (client: MongoClient, projectId: ObjectId) => {};
+
+/**
+ * Removes projectId from users project array in DB
+ *
+ * @param client - Connected mongo client
+ * @param userList - List of userIds to have project removed from
+ * @param projectId - ObjectId of project to be removed
+ * @returns promise
+ *
+ */
+const pullProject = (
+  client: MongoClient,
+  userList: Array<ObjectId>,
+  projectId: ObjectId
+) => {};
+/**
+ * Deletes all task documents associated with project from DB
+ *
+ * @param client - Connected mongo client
+ * @param projectId - ObjectId of project
+ * @returns promise
+ *
+ */
+const pullTasks = (client: MongoClient, projectId: ObjectId) => {
+  return client
+    .db("users")
+    .collection("projectTasks")
+    .deleteMany({ projectId });
+};
+/**
+ * Deletes all issue documents associated with project from DB
+ *
+ * @param client - Connected mongo client
+ * @param projectId - ObjectId of project
+ * @returns promise
+ *
+ */
+const pullIssues = (client: MongoClient, projectId: ObjectId) => {
+  return client
+    .db("users")
+    .collection("projectIssues")
+    .deleteMany({ projectId });
+};
+
+/**try {
+  console.log(project);
+  await client.connect();
+  const dbName = "users";
+  const db = client.db(dbName);
+  const collection = db.collection("users");
+  const memberList = [];
+  await project.members.forEach((member) => memberList.push(member.email));
+  console.log(memberList)
+  const filter = { email: { $in: memberList } };
+  const updateDoc = {
+    $pull: {
+      projects: new ObjectId(project._id),
+    },
+  };
+  const removeUserProjects = await db
+    .collection("users")
+    .updateMany(filter, updateDoc);
+  console.log(`Updated ${removeUserProjects.modifiedCount} documents`);
+  if (removeUserProjects) {
+      const deleteProject = await db.collection("projects").deleteOne({_id: new ObjectId(project._id)})
+      if (deleteProject.deletedCount === 1) {
+          console.log("Successfully deleted one document.");
+          res.status(200).send('deleted document')
+        } else {
+            res.status(400).send('err deleting project')
+          console.log("No documents matched the query. Deleted 0 documents.");
+        }
+  } else {
+      console.log('err removing project from users')
+      res.status(400).send('err removing project from users')
+  }
+*/

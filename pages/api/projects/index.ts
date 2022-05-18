@@ -135,48 +135,12 @@ const getProjects = async (
         },
       },
       {
-        $unwind: "$tasks",
-      },
-      { $unwind: "$tasks.subtasks" },
-      {
-        $lookup: {
-          from: "projectTasks",
-          localField: "tasks.subtasks",
-          foreignField: "_id",
-          as: "tasks.subtasks",
-        },
-      },
+        $sort :{
+          last_edit: -1
+        }
+      }
       
-      {
-        $group: {
-          _id: "$_id",
-          name: { $first: "$name" },
-          category: { $first: "$category" },
-          description: { $first: "$description" },
-          theme: { $first: "$theme" },
-          tasks: {$push: "$tasks"},
-          created_at: { $first: "$created_at" },
-          last_edit: { $first: "$last_edit" },
-          privacy: { $first: "$privacy" },
-          team: { $first: "$team" },
-          tags: { $first: "$tags" },
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          description: 1,
-          category: 1,
-          theme: 1,
-          created_at: 1,
-          last_edit: 1,
-          privacy: 1,
-          tasks: "$tasks",
-          team: 1,
-          tags: 1,
-        },
-      },
+
     ]);
   const projects: Array<Project> = [];
   await projectCursor.forEach((item) => {

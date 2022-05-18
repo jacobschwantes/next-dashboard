@@ -288,54 +288,36 @@ export default function ProjectModal(props) {
                   <h1 className="text-xl font-medium leading-6 text-gray-900">
                     {props.heading}
                   </h1>
-                  <div>
-                    <div className="block overflow-x-auto">
-                      <div className="border-b border-gray-200">
+                 
+                    <div className="block overflow-x-auto pt-3">
+                      <div className="rounded-xl bg-gray-100 p-1 ">
                         <nav
-                          className="-mb-px flex space-x-8"
+                          className=" flex space-x-8"
                           aria-label="Tabs"
                         >
                           {tabs.map((tab) => (
                             <a
-                              key={tab.name}
-                              onClick={() => setActive(tab.id)}
-                              className={classNames(
-                                active === tab.id
-                                  ? "border-blue-500 text-blue-600"
-                                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                                "group inline-flex cursor-pointer select-none items-center border-b-2 py-4 px-1 text-sm font-medium"
-                              )}
-                              aria-current={tab.current ? "page" : undefined}
-                            >
-                              <tab.icon
-                                className={classNames(
-                                  active === tab.id
-                                    ? "text-blue-500"
-                                    : "text-gray-400 group-hover:text-gray-500",
-                                  "-ml-0.5 mr-2 h-5 w-5"
-                                )}
-                                aria-hidden="true"
-                              />
-                              <span>{tab.name}</span>
-                            </a>
+                            key={tab.name}
+                            onClick={() => setActive(tab.id)}
+                            className={classNames(
+                              "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
+                              "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
+                               active === tab.id
+                                ? "bg-white text-blue-600 shadow"
+                                : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600"
+                            )}
+                          ><tab.icon className="h-5 mr-1" />
+                            <h1 className="hidden sm:block">{tab.name}</h1>{" "}
+                            
+                          </a>
                           ))}
                         </nav>
                       </div>
-                    </div>
+                   
                   </div>
-                  <div className=" py-4">
+                  <div className=" py-3">
                     {active === "general" ? (
                       <div className="space-y-2">
-                        <div>
-                          <h1 className="text-lg font-medium leading-6 text-gray-900">
-                            Project Settings
-                          </h1>
-                          <p className="mt-1 text-sm text-gray-500">
-                            Let’s get started by filling in the information
-                            below to create your new project.
-                          </p>
-                        </div>
-
                         <div>
                           <label
                             htmlFor="project-name"
@@ -393,7 +375,8 @@ export default function ProjectModal(props) {
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
                               rows={3}
-                              className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                              
+                              className="block w-full resize-none rounded-md border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                             />
                           </div>
                         </div>
@@ -425,7 +408,7 @@ export default function ProjectModal(props) {
                                   setTagInput("");
                                 }}
                                 type="button"
-                                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
                               >
                                 <PlusIcon
                                   className="-ml-2 mr-1 h-5 w-5 text-gray-400"
@@ -700,7 +683,7 @@ export default function ProjectModal(props) {
                     setOpen={setCreateError}
                   />
                 ) : null}
-                <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+                <div className=" sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
                     type="submit"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"

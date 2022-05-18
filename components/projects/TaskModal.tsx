@@ -78,7 +78,6 @@ export default function TaskModal(props) {
   const [alert, setAlert] = useState("");
   const [name, setName] = useState("");
   const [createError, setCreateError] = useState(null);
-  const [active, setActive] = useState("general");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(priorityOptions[1]);
@@ -89,7 +88,6 @@ export default function TaskModal(props) {
     if (!props.open) {
       setTimeout(() => {
         setName("");
-        setActive("general");
         setCategory("");
         setDescription("");
         setPriority(priorityOptions[1]);
@@ -104,6 +102,7 @@ export default function TaskModal(props) {
   async function createTask() {
     setLoading(true);
     let task: Task = {
+      projectId: props.projectId,
       name,
       team,
       description,
@@ -127,6 +126,7 @@ export default function TaskModal(props) {
   async function createSubTask() {
     setLoading(true);
     let task: Task = {
+      projectId: props.projectId,
       name,
       team,
       description,
@@ -137,7 +137,7 @@ export default function TaskModal(props) {
       activity: [],
       completed: false,
     };
-    console.log(props.taskId)
+    console.log(props.taskId);
     await postData(`/api/projects/${props.projectId}/tasks/${props.taskId}`, {
       task,
     }).then((res) => {
@@ -235,9 +235,9 @@ export default function TaskModal(props) {
                           {tabs.map((tab) => (
                             <a
                               key={tab.name}
-                              onClick={() => setActive(tab.id)}
+                              onClick={() => props.setActiveTab(tab.id)}
                               className={classNames(
-                                active === tab.id
+                                props.activeTab === tab.id
                                   ? "border-blue-500 text-blue-600"
                                   : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                                 "group inline-flex cursor-pointer select-none items-center border-b-2 py-4 px-1 text-sm font-medium"
@@ -245,7 +245,7 @@ export default function TaskModal(props) {
                             >
                               <tab.icon
                                 className={classNames(
-                                  active === tab.id
+                                  props.activeTab === tab.id
                                     ? "text-blue-500"
                                     : "text-gray-400 group-hover:text-gray-500",
                                   "-ml-0.5 mr-2 h-5 w-5"
@@ -260,7 +260,7 @@ export default function TaskModal(props) {
                     </div>
                   </div>
                   <div className=" py-4">
-                    {active === "general" ? (
+                    {props.activeTab === "general" ? (
                       <div className="space-y-2">
                         <div>
                           <label
@@ -371,7 +371,7 @@ export default function TaskModal(props) {
                           </div>
                         </div>
                       </div>
-                    ) : active === "team" ? (
+                    ) : props.activeTab === "team" ? (
                       <div className="space-y-2">
                         <div className="space-y-1">
                           <label
@@ -519,7 +519,10 @@ export default function TaskModal(props) {
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
-                    onClick={() => props.setOpen(false)}
+                    onClick={() => {
+                      setTimeout(() => props.setActiveTab("general"), 500)
+                      props.setOpen(false);
+                    }}
                   >
                     Cancel
                   </button>

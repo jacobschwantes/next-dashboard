@@ -33,6 +33,7 @@ export type Project = {
 };
 export type Issue = {
   _id?: ObjectId;
+  projectId: ObjectId;
   author: Member;
   title: string;
   category?: string;
@@ -44,6 +45,7 @@ export type Issue = {
 };
 export type Task = {
   _id?: ObjectId;
+  projectId: ObjectId;
   name: string;
   team: Array<Member>;
   description: string;

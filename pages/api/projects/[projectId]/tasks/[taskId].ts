@@ -4,6 +4,7 @@ import { MongoClient } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Task } from "../../../../../types/projects";
 import { Session } from "next-auth";
+import { createNotification } from "../../../../../lib/notifications";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -51,24 +52,37 @@ export default async function handler(
 
           break;
         case "PUT":
-          console.log('putting...')
+          console.log("putting...");
           const updateResult = await updateTask(client, taskId, newTask);
-          updateResult
-            ? res.status(200).send("updated task")
-            : res.status(400).send("failed to update task");
+          if (updateResult) {
+            const users: string[] = [];
+            newTask.team.forEach((item) => users.push(item.email));
+            await createNotification(client, users, req.query.action, {
+              user: session.user,
+              projectId,
+              task: newTask,
+            });
+            res.status(200).send("updated task");
+          } else {
+            res.status(400).send("failed to update task");
+          }
+
           break;
         case "DELETE":
           console.log("deleting task...");
-          const deleteResult = await deleteTask(client, new ObjectId(req.body.taskId));
+          const deleteResult = await deleteTask(
+            client,
+            new ObjectId(req.body.taskId)
+          );
           if (deleteResult) {
-            console.log('pulling task')
+            console.log("pulling task");
             const pullResult = await pullSubTaskFromTask(
               client,
               taskId,
               new ObjectId(req.body.taskId)
             );
           }
-          deleteResult 
+          deleteResult
             ? res.status(200).send("deleted task")
             : res.status(400).send("failed to delete task");
       }

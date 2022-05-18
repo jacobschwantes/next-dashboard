@@ -44,7 +44,7 @@ const PriorityTag = (props) => {
   switch (props.priority) {
     case 0:
       return (
-        <span className="rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-600">
+        <span className="rounded-md bg-green-100 px-2 py-0.5 text-sm font-medium text-green-600">
           Low priority
         </span>
       );
@@ -52,13 +52,13 @@ const PriorityTag = (props) => {
       return "";
     case 2:
       return (
-        <span className="rounded-full bg-yellow-100 px-3 py-0.5 text-sm font-medium text-yellow-600">
+        <span className="rounded-md bg-yellow-100 px-2 py-0.5 text-sm font-medium text-yellow-600">
           High priority
         </span>
       );
     case 3:
       return (
-        <span className="rounded-full bg-red-100 px-3 py-0.5 text-sm font-medium text-red-600">
+        <span className="rounded-md bg-red-100 px-2 py-0.5 text-sm font-medium text-red-600">
           Urgent
         </span>
       );
@@ -69,8 +69,9 @@ const PriorityTag = (props) => {
 export default function TaskBoard(props) {
   const [open, setOpen] = useState(false);
   const [task, setTask] = useState(props.data);
+  const [modalTab, setModalTab] = useState("general");
 
-  const updateTask = (data) => {
+  const updateTask = (data, action) => {
     const index = task.subtasks.findIndex((item) => item._id === data._id);
     console.log(index);
     const newState = [...task.subtasks];
@@ -78,7 +79,7 @@ export default function TaskBoard(props) {
     newState[index] = data;
     console.log({ ...task, subtasks: newState });
     setTask({ ...task, subtasks: newState });
-    putTask(data._id, data);
+    putTask(data._id, data, action);
   };
   const deleteTask = async (taskId) => {
     await postData(
@@ -89,10 +90,14 @@ export default function TaskBoard(props) {
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
   };
-  const putTask = async (taskId, data) => {
-    await postData(`/api/projects/${props.projectId}/tasks/${taskId}`, "PUT", {
-      task: data,
-    })
+  const putTask = async (taskId, data, event) => {
+    await postData(
+      `/api/projects/${props.projectId}/tasks/${taskId}?action=${event}`,
+      "PUT",
+      {
+        task: data,
+      }
+    )
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
   };
@@ -106,8 +111,10 @@ export default function TaskBoard(props) {
     }
   };
   return (
-    <div className="mt-6   ">
+    <div className="mt-6  ">
       <TaskModal
+         setActiveTab={setModalTab}
+        activeTab={modalTab}
         taskId={props.taskId}
         isSubtask={true}
         projectId={props.projectId}
@@ -116,16 +123,7 @@ export default function TaskBoard(props) {
         open={open}
         setOpen={setOpen}
       />
-      <div className="flex space-x-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-lg shadow-gray-100  ">
-        <input
-          checked={task.subtasks.every((item) => item.completed)}
-          id="candidates"
-          aria-describedby="candidates-description"
-          name="candidates"
-          type="checkbox"
-          className="mt-2 h-6 w-6 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
-        />
-
+      <div className="flex lg:space-x-3   ">
         <div className="flex-1">
           <div className="mb-3">
             <div className=" flex items-center justify-between   ">
@@ -139,17 +137,19 @@ export default function TaskBoard(props) {
                   <PlusIcon className="mr-1 h-4" />
                   New Task
                 </button>
-                <Dropdown
-                  icon={PencilIcon}
-                  title="Priority"
-                  active="High"
-                  options={[
-                    { option: "Low" },
-                    { option: "Normal" },
-                    { option: "High" },
-                    { option: "Urgent" },
-                  ]}
-                />
+                <div className="hidden lg:block">
+                  <Dropdown
+                    icon={PencilIcon}
+                    title="Priority"
+                    active="High"
+                    options={[
+                      { option: "Low" },
+                      { option: "Normal" },
+                      { option: "High" },
+                      { option: "Urgent" },
+                    ]}
+                  />
+                </div>
                 <Dropdown
                   orientation="horizontal"
                   shortButton={true}
@@ -164,29 +164,28 @@ export default function TaskBoard(props) {
           </div>
           <h1 className="text-lg font-medium">Sub-Tasks</h1>
 
-          <dl className="  ">
+          <dl className="mt-2 space-y-2  ">
             {task.subtasks.map((subTaskItem) => (
-              <div className="space-y-3 border-b py-4 pb-4 first:pt-2  last:border-white">
+              <div className="space-y-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-lg shadow-gray-100 last:border-white lg:p-5">
                 <Disclosure as="div" key={subTaskItem.name} className=" ">
                   {({ open }) => (
-                    <>
-                      <dt className="flex w-full items-center justify-between text-lg ">
-                        <div className="flex items-center space-x-3">
-                          <input
-                            onInput={() => {
-                              const newState = { ...subTaskItem };
-                              newState.completed = true;
-                              updateTask(newState);
-                              console.log(task);
-                            }}
-                            id="candidates"
-                            checked={subTaskItem.completed}
-                            aria-describedby="candidates-description"
-                            name="candidates"
-                            type="checkbox"
-                            className="h-6 w-6 rounded-full border-gray-300  text-blue-600 focus:ring-blue-500"
-                          />
-
+                    < >
+                      <dt className="flex w-full items-start space-x-2 text-lg   lg:items-center ">
+                        <input
+                          onInput={() => {
+                            const newState = { ...subTaskItem };
+                            newState.completed = true;
+                            updateTask(newState, "taskComplete");
+                            console.log(task);
+                          }}
+                          id="candidates"
+                          checked={subTaskItem.completed}
+                          aria-describedby="candidates-description"
+                          name="candidates"
+                          type="checkbox"
+                          className="mt-0.5 h-6 w-6 flex-shrink-0 rounded-full border-gray-300  text-blue-600 focus:ring-blue-500"
+                        />
+                        <div className="flex flex-1 flex-col items-start space-y-2 lg:flex-row lg:items-center lg:space-y-0 lg:space-x-3">
                           <span className="font-medium capitalize text-gray-600 ">
                             {subTaskItem.name}
                           </span>
@@ -198,18 +197,20 @@ export default function TaskBoard(props) {
                             </h1>
                           </Disclosure.Button>
                         </div>
-                        <div className=" flex items-center space-x-2">
-                          <Dropdown
-                            icon={PencilIcon}
-                            title="Priority"
-                            active="High"
-                            options={[
-                              { option: "Low" },
-                              { option: "Normal" },
-                              { option: "High" },
-                              { option: "Urgent" },
-                            ]}
-                          />
+                        <div className=" flex flex-shrink-0 items-center space-x-2">
+                          <div className="hidden lg:block">
+                            <Dropdown
+                              icon={PencilIcon}
+                              title="Priority"
+                              active="High"
+                              options={[
+                                { option: "Low" },
+                                { option: "Normal" },
+                                { option: "High" },
+                                { option: "Urgent" },
+                              ]}
+                            />
+                          </div>
                           <Dropdown
                             orientation="horizontal"
                             shortButton={true}
@@ -238,12 +239,13 @@ export default function TaskBoard(props) {
                 </Disclosure>
                 <div className="flex items-center justify-between">
                   <div className="ml-8 flex items-center space-x-3 ">
-                    {" "}
+                    
                     <div className="flex -space-x-2 overflow-hidden">
                       {subTaskItem.team
-                        ? subTaskItem.team.map((item) => {
+                        ? subTaskItem.team.map((item, idx) => {
                             return (
                               <img
+                                key={idx}
                                 className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
                                 src={item.image}
                                 alt=""
@@ -251,9 +253,15 @@ export default function TaskBoard(props) {
                             );
                           })
                         : null}
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-gray-600 ring-2 ring-white hover:bg-gray-300">
+                      <button
+                        onClick={() => {
+                          setModalTab("team");
+                          setOpen(true);
+                        }}
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-gray-600 ring-2 ring-white hover:bg-gray-300"
+                      >
                         <UserAddIcon className="h-5 w-5" />
-                      </span>
+                      </button>
                     </div>
                   </div>
                 </div>
