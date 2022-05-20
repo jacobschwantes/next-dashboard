@@ -1,6 +1,4 @@
 import {
-  ChartBarIcon,
-  ExternalLinkIcon,
   PlusIcon,
 } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
@@ -8,14 +6,8 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import Input from "../../components/Input";
 import { useState } from "react";
 import ProjectModal from "../../components/ProjectModal";
-import ProjectCard from "../../components/ProjectCard2";
 import { useProjects } from "../../lib/utils";
-import useSWR, { useSWRConfig } from "swr";
-import ProjectLoadingState from "../../components/ProjectLoadingState";
-import TaskTable from "../../components/TaskTable";
-import { Fragment } from "react";
-import { Dialog, Transition, Disclosure } from "@headlessui/react";
-import { ArrowLeftIcon, XIcon } from "@heroicons/react/outline";
+import { useSWRConfig } from "swr";
 import ProjectCards from "../../components/projects/ProjectCards";
 async function getLoadingStates() {
   return ["1", "2", "3", "4", "5", "6"];
@@ -96,7 +88,7 @@ export default function App() {
         </button>
       </div>
       <div className="">
-        {isLoading ? null : <ProjectCards  session={session} projects={searchProjects} />}
+        {!isLoading || !isError ? <ProjectCards  session={session} projects={searchProjects} /> : null}
       </div>
       <div className="  ">
         <ProjectModal
