@@ -6,16 +6,39 @@ import Table from "../components/Table";
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useSession } from "next-auth/react";
 import { useNews } from "../lib/utils";
-export default function App({news}) {
+import { ArrowUpIcon } from "@heroicons/react/outline";
+import { DateTime } from "luxon";
+export default function App({ news }) {
   const { data: session, status } = useSession();
   const slides = [
-    { heading: 'breaking news', title: "Ethereum hits new highs", subtitle: "Prices soared to more than $4,000 on wednesday.", src: "media1.jpg" },
-    { heading: 'trending on r/webdev', title: "Building permits blocked", subtitle: "Sky rise permits in north Chicago were blocked by Gov. Newson.dsfsdfdsfsdfsdfsdfsdfsdfsdf", src: "media2.jpg" },
-    { heading: 'Popular on dev.to', title: "Technology REST API", subtitle: "Get tech prices, news, and more.", src: "media3.jpg" },
+    {
+      heading: "breaking news",
+      title: "Ethereum hits new highs",
+      subtitle: "Prices soared to more than $4,000 on wednesday.",
+      src: "media1.jpg",
+    },
+    {
+      heading: "trending on r/webdev",
+      title: "Building permits blocked",
+      subtitle:
+        "Sky rise permits in north Chicago were blocked by Gov. Newson.dsfsdfdsfsdfsdfsdfsdfsdfsdf",
+      src: "media2.jpg",
+    },
+    {
+      heading: "Popular on dev.to",
+      title: "Technology REST API",
+      subtitle: "Get tech prices, news, and more.",
+      src: "media3.jpg",
+    },
   ];
   return (
-    <div className=" space-y-5 overflow-auto px-4 py-4   xl:px-10  mx-auto">
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3  ">
+    <div className=" mx-auto space-y-8 overflow-auto px-4   py-4  xl:px-10">
+      <div className="space-y-2">
+        <h2 className="text-xl">
+          Welcome back,{" "}
+          <span className="font-medium">{session.user.name.split(" ")[0]}</span>
+        </h2>
+        {/* <div className="grid grid-cols-1 gap-5 lg:grid-cols-3  ">
         <div className=" col-span-1    rounded-2xl   border border-gray-200  bg-blue-100 dark:bg-blue-200   md:col-span-2 ">
           <div className=" flex flex-col  items-center justify-start space-y-3 p-10 md:flex-row md:justify-between ">
             <div className=" flex flex-col items-center justify-center space-y-3 md:items-start md:justify-start ">
@@ -48,56 +71,61 @@ export default function App({news}) {
         <div className="  col-span-1">
           <EmblaCarousel slides={news.articles} />
         </div>
-      </div>
-      <div className="grid w-full grid-cols-1 grid-rows-1 gap-5 lg:grid-cols-3">
-        <MetricsCard
-          type="count"
-          change={1.5}
-          value="page_views"
-          title="Page Views"
-          down="true"
-          theme="palette1"
-        />
-        <MetricsCard
-          type="count"
-          change={-2.5}
-          value="sessions"
-          title="Sessions"
-          down="false"
-          theme="palette4"
-        />
-        <MetricsCard
-          type="time"
-          change={3}
-          value="avg_session"
-          title="Avg. Session Length"
-          down={false}
-          theme="palette3"
-        />
+      </div> */}
+        <p className="text-sm text-zinc-600">
+          {DateTime.now().toLocaleString({
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
       </div>
       <div className="grid w-full grid-cols-1 gap-5  lg:grid-cols-3">
-        <div>
-          <PieChart
-            dark={false}
-            label="Sessions by Device"
-            mobileUsers={78343}
-            tabletUsers={12244}
-            desktopUsers={53345}
-            otherUsers={44323}
-          />
-        </div>
-        <div className="col-span-2">
-          <ApexChart dark={false} />
+        <div className="bg-white col-span-3 flex divide-x rounded-2xl  border border-gray-100  p-7 dark:border-zinc-900 dark:bg-black  ">
+          <div className="flex-1 pr-7">
+            <ApexChart seriesOption="1w" dark={false} />
+          </div>
+
+          <div className="flex min-w-[30%] flex-col justify-evenly pl-7   ">
+            <div className="space-y-2  ">
+              <h1 className=" flex items-center text-zinc-500">
+                MRR
+                <span className="ml-2 flex items-center rounded bg-lime-500 bg-opacity-30 px-1 py-0.5 text-sm text-lime-700">
+                  <ArrowUpIcon className="mr-1 h-4 rotate-45" /> 1.2%
+                </span>
+              </h1>
+              <p className="text-2xl font-medium">$5345.54</p>
+            </div>
+            <span className="border-t" />
+            <div className="space-y-2 ">
+              <h1 className=" flex items-center text-zinc-500">
+                Weekly sign up
+                <span className="ml-2 flex items-center rounded bg-red-500 bg-opacity-30 px-1 py-0.5 text-sm text-red-700">
+                  <ArrowUpIcon className="mr-1 h-4 rotate-[135deg]" /> 5.1%
+                </span>
+              </h1>
+              <p className="text-2xl font-medium">21</p>
+            </div>
+            <span className="border-t" />
+            <div className="space-y-2">
+              <h1 className=" flex items-center text-zinc-500">
+                Avg. page load time
+                <span className="ml-2 flex items-center rounded bg-lime-500 bg-opacity-30 px-1 py-0.5 text-sm text-lime-700">
+                  <ArrowUpIcon className="mr-1 h-4 rotate-45" /> 0.7%
+                </span>
+              </h1>
+              <p className="text-2xl font-medium">1.6s</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-
 export async function getStaticProps() {
-  const res = await fetch('https://dashboard.jasch.dev/api/news')
-  const news = await res.json()
+  const res = await fetch("https://dashboard.jacobschwantes.com/api/news");
+  const news = await res.json();
   return {
     props: {
       news,
@@ -106,6 +134,6 @@ export async function getStaticProps() {
     // - When a request comes in
     // - At most once every 10 seconds
     revalidate: 60, // In seconds
-  }
+  };
 }
 App.Layout = DefaultLayout;

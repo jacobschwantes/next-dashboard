@@ -266,7 +266,7 @@ export default function App({ news }) {
   );
 }
 export async function getStaticProps() {
-  const res = await fetch("https://dashboard.jasch.dev/api/news");
+  const res = await fetch("https://dashboard.jacobschwantes.com/api/news");
   const news = await res.json();
   return {
     props: {
